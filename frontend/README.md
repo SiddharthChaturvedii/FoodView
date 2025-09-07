@@ -1,8 +1,6 @@
 # 🍴 FoodView – A YouTube-Inspired Food Discovery Platform
 
-![GitHub stars](https://img.shields.io/github/stars/your-username/your-repo-name?style=social)
-![GitHub forks](https://img.shields.io/github/forks/your-username/your-repo-name?style=social)
-![License](https://img.shields.io/github/license/your-username/your-repo-name)
+
 ![Built With](https://img.shields.io/badge/Built%20With-React%2C%20TailwindCSS%2C%20Node.js-blue)
 
 ---
@@ -40,12 +38,10 @@ Users can explore, search, and view dishes interactively – making it both **en
 
 ---
 
-## 📸 Screenshots / Demo
-> *(Add screenshots, GIFs, or demo video links here)*  
 
 ---
 
 ## ⚙️ Installation & Setup
 1. Clone the repo  
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+   git clone https://github.com/your-username/FoodView.git
