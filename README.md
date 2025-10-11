@@ -31,12 +31,13 @@ Users can explore, search, and view dishes interactively – making it both **en
 
 ## 🛠 Tech Stack
 - **Frontend:** React.js, Tailwind CSS  
-- **Backend:** Node.js, Express.js *(if implemented)*  
-- **API Integration:** YouTube Data API / Recipe APIs *(if used)*  
-- **Database:** MongoDB / Firebase *(based on setup)*  
-- **Tools & Deployment:** Git, GitHub, Vercel / Netlify  
+- **Backend:** Node.js, Express.js 
+- **API Integration:**  REST APIs   
+- **Database:** MongoDB 
+- **Tools & Deployment:** Git, GitHub, Vercel / Netlify  (deployment in future after adding more featues)
 
 ---
+
 
 
 ---
