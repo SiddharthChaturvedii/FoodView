@@ -2,10 +2,22 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
+import { Link, useParams } from 'react-router-dom';
+import CreateFood from '../food-partner/CreateFood';
 
 const Home = () => {
+    // const { id } = useParams()
     const [ videos, setVideos ] = useState([])
-    // Autoplay behavior is handled inside ReelFeed
+    // const [ profile, setProfile ] = useState(null)
+
+    
+    // useEffect(() => {
+    //     axios.get(`http://localhost:3000/api/food-partner/${id}`, { withCredentials: true })
+    //         .then(response => {
+    //             setProfile(response.data.foodPartner)
+    //             setVideos(response.data.foodPartner.foodItems)
+    //         })
+    // }, [ id ])
 
     useEffect(() => {
         axios.get("http://localhost:3000/api/food", { withCredentials: true })
@@ -45,13 +57,23 @@ const Home = () => {
     }
 
     return (
-        <ReelFeed
-            items={videos}
-            onLike={likeVideo}
-            onSave={saveVideo}
-            emptyMessage="No videos available."
-        />
-    )
+  <>
+    {/* {profile?.address && (
+      <button>
+        <Link to='/create-food'>
+          hello
+        </Link> 
+      </button>
+    )} */}
+    <ReelFeed
+      items={videos}
+      onLike={likeVideo}
+      onSave={saveVideo}
+      emptyMessage="No videos available."
+    />
+  </>
+);
+
 }
 
 export default Home

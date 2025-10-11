@@ -96,9 +96,10 @@ const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' 
               </div>
 
               <div className="reel-content">
+                <h3 className="reel-title">{item.name}</h3>
                 <p className="reel-description" title={item.description}>{item.description}</p>
                 {item.foodPartner && (
-                  <Link className="reel-btn" to={"/food-partner/" + item.foodPartner} aria-label="Visit store">Visit store</Link>
+                  <Link className="reel-btn" to={"/food-partner/" + item.foodPartner._id} aria-label="Visit store">Visit store</Link>
                 )}
               </div>
             </div>
