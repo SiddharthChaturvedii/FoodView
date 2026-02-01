@@ -6,21 +6,31 @@ import UserLogin from '../pages/auth/UserLogin';
 import FoodPartnerRegister from '../pages/auth/FoodPartnerRegister';
 import FoodPartnerLogin from '../pages/auth/FoodPartnerLogin';
 import Home from '../pages/general/Home';
+import LandingPage from '../pages/general/LandingPage';
 import Saved from '../pages/general/Saved';
 import BottomNav from '../components/BottomNav';
 import CreateFood from '../pages/food-partner/CreateFood';
 import Profile from '../pages/food-partner/Profile';
 
+import Annapurna from '../pages/general/Annapurna';
+
 const AppRoutes = () => {
     return (
         <Router>
             <Routes>
+                {/* Auth Routes */}
                 <Route path="/register" element={<ChooseRegister />} />
                 <Route path="/user/register" element={<UserRegister />} />
                 <Route path="/user/login" element={<UserLogin />} />
                 <Route path="/food-partner/register" element={<FoodPartnerRegister />} />
                 <Route path="/food-partner/login" element={<FoodPartnerLogin />} />
-                <Route path="/" element={<><Home /><BottomNav /></>} />
+
+                {/* Public Landing Page */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/annapurna" element={<Annapurna />} />
+
+                {/* App Content Routes */}
+                <Route path="/explore" element={<><Home /><BottomNav /></>} />
                 <Route path="/saved" element={<><Saved /><BottomNav /></>} />
                 <Route path="/create-food" element={<CreateFood />} />
                 <Route path="/food-partner/:id" element={<Profile />} />

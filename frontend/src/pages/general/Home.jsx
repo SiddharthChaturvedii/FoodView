@@ -4,75 +4,79 @@ import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
 import { Link, useParams } from 'react-router-dom';
 import CreateFood from '../food-partner/CreateFood';
+import LandingPage from './LandingPage';
 
 const Home = () => {
-    // const { id } = useParams()
-    const [ videos, setVideos ] = useState([])
-    // const [ profile, setProfile ] = useState(null)
+  // const { id } = useParams()
+  const [videos, setVideos] = useState([])
+  // const [ profile, setProfile ] = useState(null)
 
-    
-    // useEffect(() => {
-    //     axios.get(`http://localhost:3000/api/food-partner/${id}`, { withCredentials: true })
-    //         .then(response => {
-    //             setProfile(response.data.foodPartner)
-    //             setVideos(response.data.foodPartner.foodItems)
-    //         })
-    // }, [ id ])
 
-    useEffect(() => {
-        axios.get("http://localhost:3000/api/food", { withCredentials: true })
-            .then(response => {
+  // useEffect(() => {
+  //     axios.get(`http://localhost:3000/api/food-partner/${id}`, { withCredentials: true })
+  //         .then(response => {
+  //             setProfile(response.data.foodPartner)
+  //             setVideos(response.data.foodPartner.foodItems)
+  //         })
+  // }, [ id ])
 
-                console.log(response.data);
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/food", { withCredentials: true })
+      .then(response => {
 
-                setVideos(response.data.foodItems)
-            })
-            .catch(() => { /* noop: optionally handle error */ })
-    }, [])
+        console.log(response.data);
 
-    // Using local refs within ReelFeed; keeping map here for dependency parity if needed
+        setVideos(response.data.foodItems)
+      })
+      .catch(() => { /* noop: optionally handle error */ })
+  }, [])
 
-    async function likeVideo(item) {
+  // Using local refs within ReelFeed; keeping map here for dependency parity if needed
 
-        const response = await axios.post("http://localhost:3000/api/food/like", { foodId: item._id }, {withCredentials: true})
+  async function likeVideo(item) {
 
-        if(response.data.like){
-            console.log("Video liked");
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
-        }else{
-            console.log("Video unliked");
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
-        }
-        
+    const response = await axios.post("http://localhost:3000/api/food/like", { foodId: item._id }, { withCredentials: true })
+
+    if (response.data.like) {
+      console.log("Video liked");
+      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
+    } else {
+      console.log("Video unliked");
+      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
     }
 
-    async function saveVideo(item) {
-        const response = await axios.post("http://localhost:3000/api/food/save", { foodId: item._id }, { withCredentials: true })
-        
-        if(response.data.save){
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))
-        }else{
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v))
-        }
-    }
+  }
 
-    return (
-  <>
-    {/* {profile?.address && (
+  async function saveVideo(item) {
+    const response = await axios.post("http://localhost:3000/api/food/save", { foodId: item._id }, { withCredentials: true })
+
+    if (response.data.save) {
+      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))
+    } else {
+      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v))
+    }
+  }
+
+  return (
+    <>
+      {/* {profile?.address && (
       <button>
         <Link to='/create-food'>
           hello
         </Link> 
       </button>
     )} */}
-    <ReelFeed
-      items={videos}
-      onLike={likeVideo}
-      onSave={saveVideo}
-      emptyMessage="No videos available."
-    />
-  </>
-);
+      <div className="bg-black min-h-screen text-white">
+        <LandingPage />
+        <ReelFeed
+          items={videos}
+          onLike={likeVideo}
+          onSave={saveVideo}
+          emptyMessage="No videos available."
+        />
+      </div>
+    </>
+  );
 
 }
 

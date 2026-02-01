@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth-shared.css';
+import AuthLayout from '../../components/auth/AuthLayout';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -79,7 +80,7 @@ const UserRegister = () => {
     };
 
     return (
-        <div className="auth-page-wrapper">
+        <AuthLayout>
             <div className="auth-card" role="region" aria-labelledby="user-register-title">
                 <header>
                     <h1 id="user-register-title" className="auth-title">Create your account</h1>
@@ -123,7 +124,7 @@ const UserRegister = () => {
                     Already have an account? <Link to="/user/login">Sign in</Link>
                 </div>
             </div>
-        </div>
+        </AuthLayout>
     );
 };
 

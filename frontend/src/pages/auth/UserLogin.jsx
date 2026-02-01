@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../styles/auth-shared.css';
+import AuthLayout from '../../components/auth/AuthLayout';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +26,7 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="auth-page-wrapper">
+    <AuthLayout>
       <div className="auth-card" role="region" aria-labelledby="user-login-title">
         <header>
           <h1 id="user-login-title" className="auth-title">Welcome back</h1>
@@ -46,7 +47,7 @@ const UserLogin = () => {
           New here? <a href="/user/register">Create account</a>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 
