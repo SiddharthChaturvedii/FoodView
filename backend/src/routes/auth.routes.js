@@ -1,7 +1,11 @@
 const express = require('express');
 const authController = require("../controllers/auth.controller")
+const meController = require("../controllers/me.controller");
 
 const router = express.Router();
+
+// Get current user (unified)
+router.get('/me', meController.getCurrentUser);
 
 // user auth APIs
 router.post('/user/register', authController.registerUser)

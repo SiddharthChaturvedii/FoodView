@@ -12,7 +12,12 @@ async function createFood(req, res) {
         name: req.body.name,
         description: req.body.description,
         video: fileUploadResult.url,
-        foodPartner: req.foodPartner._id
+        foodPartner: req.foodPartner._id,
+        // Donation Fields
+        isDonation: req.body.isDonation,
+        quantity: req.body.quantity,
+        pickupTime: req.body.pickupTime,
+        expiryDate: req.body.expiryDate
     })
 
     res.status(201).json({
@@ -23,7 +28,18 @@ async function createFood(req, res) {
 }
 
 async function getFoodItems(req, res) {
-    const foodItems = await foodModel.find({}).populate("foodPartner")
+    // Filter: Show all standard posts OR non-expired donations
+    const query = {
+        $or: [
+            { isDonation: { $ne: true } }, // Standard posts (isDonation is false or undefined)
+            {
+                isDonation: true,
+                expiryDate: { $gt: new Date() } // Only future expiry dates
+            }
+        ]
+    };
+
+    const foodItems = await foodModel.find(query).populate("foodPartner")
     res.status(200).json({
         message: "Food items fetched successfully",
         foodItems

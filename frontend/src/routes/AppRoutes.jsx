@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import UserRegister from '../pages/auth/UserRegister';
 import ChooseRegister from '../pages/auth/ChooseRegister';
 import UserLogin from '../pages/auth/UserLogin';
@@ -11,6 +11,7 @@ import Saved from '../pages/general/Saved';
 import BottomNav from '../components/BottomNav';
 import CreateFood from '../pages/food-partner/CreateFood';
 import Profile from '../pages/food-partner/Profile';
+import UserProfile from '../pages/user/UserProfile';
 
 import Annapurna from '../pages/general/Annapurna';
 
@@ -25,8 +26,11 @@ const AppRoutes = () => {
                 <Route path="/food-partner/register" element={<FoodPartnerRegister />} />
                 <Route path="/food-partner/login" element={<FoodPartnerLogin />} />
 
-                {/* Public Landing Page */}
-                <Route path="/" element={<LandingPage />} />
+                {/* Redirect root to login */}
+                <Route path="/" element={<Navigate to="/user/login" replace />} />
+
+                {/* Homepage (after login) */}
+                <Route path="/home" element={<LandingPage />} />
                 <Route path="/annapurna" element={<Annapurna />} />
 
                 {/* App Content Routes */}
@@ -34,6 +38,9 @@ const AppRoutes = () => {
                 <Route path="/saved" element={<><Saved /><BottomNav /></>} />
                 <Route path="/create-food" element={<CreateFood />} />
                 <Route path="/food-partner/:id" element={<Profile />} />
+
+                {/* User Profile */}
+                <Route path="/user/profile" element={<UserProfile />} />
             </Routes>
         </Router>
     )

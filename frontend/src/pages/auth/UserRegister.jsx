@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth-shared.css';
 import AuthLayout from '../../components/auth/AuthLayout';
-import axios from 'axios';
+import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 
 const UserRegister = () => {
@@ -57,12 +57,10 @@ const UserRegister = () => {
         setSuccessMessage('');
 
         try {
-            const response = await axios.post("http://localhost:3000/api/auth/user/register", {
+            const response = await api.post("/api/auth/user/register", {
                 fullName: `${formData.firstName} ${formData.lastName}`,
                 email: formData.email,
                 password: formData.password
-            }, {
-                withCredentials: true
             });
 
             console.log(response.data);

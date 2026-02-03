@@ -1,0 +1,222 @@
+@import '../styles/theme.css';
+
+.foodie-ai-section {
+    padding: var(--space-8) var(--space-6);
+    background: #000;
+    /* Deep black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+}
+
+.foodie-ai-container {
+    width: 100%;
+    max-width: 900px;
+    background: #343541;
+    /* ChatGPT-like dark grey */
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    height: 600px;
+}
+
+.ai-header {
+    background: #343541;
+    color: #fff;
+    padding: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ececf1;
+}
+
+.ai-subtitle {
+    font-size: 0.8rem;
+    color: #c5c5d2;
+}
+
+.ai-messages-area {
+    flex: 1;
+    padding: var(--space-4);
+    overflow-y: auto;
+    background: #343541;
+    /* Main chat area color */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-0);
+}
+
+/* Scrollbar styling for chat area */
+.ai-messages-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ai-messages-area::-webkit-scrollbar-thumb {
+    background-color: #565869;
+    border-radius: 4px;
+}
+
+.message-row {
+    display: flex;
+    padding: var(--space-6) var(--space-4);
+    gap: var(--space-4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    /* Subtle divider */
+    justify-content: center;
+}
+
+.message-row.bot-row {
+    background: #444654;
+    /* Distinct background for bot */
+}
+
+.message-row.user-row {
+    background: #343541;
+}
+
+.avatar {
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bot-avatar {
+    background: #19c37d;
+    /* OpenAI green-ish */
+    color: white;
+}
+
+.user-avatar {
+    background: #5436da;
+    /* User distinctive color */
+    color: white;
+}
+
+.message-content {
+    flex: 1;
+    max-width: 800px;
+    color: #d1d5db;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.ai-input-area {
+    padding: var(--space-6);
+    background: #343541;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    background-image: linear-gradient(180deg, rgba(53, 55, 64, 0), #353740 58.85%);
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    align-items: center;
+    background: #40414f;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-input {
+    flex: 1;
+    padding: 1rem;
+    padding-right: 3rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    max-height: 200px;
+    overflow-y: hidden;
+}
+
+.ai-input::placeholder {
+    color: #8e8ea0;
+}
+
+.ai-send-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    /* Aligned for multiline potentially */
+    background: transparent;
+    color: #ececf1;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.ai-send-btn:hover {
+    background: #202123;
+    color: white;
+}
+
+.ai-send-btn:disabled {
+    color: #565869;
+    cursor: not-allowed;
+}
+
+.ai-recommendation-card {
+    margin-top: var(--space-4);
+    display: flex;
+    gap: var(--space-3);
+    background: #202123;
+    /* Dark card */
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid #565869;
+    transition: border-color 0.2s;
+    max-width: 400px;
+}
+
+.ai-recommendation-card:hover {
+    border-color: #8e8ea0;
+}
+
+.rec-img {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+}
+
+.rec-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.rec-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ececf1;
+}
+
+.rec-place {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
