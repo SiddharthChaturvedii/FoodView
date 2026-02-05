@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MoveRight, Sparkles } from "lucide-react";
 
@@ -45,7 +46,7 @@ function Hero() {
 
                         {/* Rotating Text Container - Adapted from Reference */}
                         {/* Using flex and explicit height management via &nbsp; trick + absolute positioning */}
-                        <div className="relative flex w-full justify-center overflow-visible text-center mt-6 md:mt-10">
+                        <div className="relative flex w-full justify-center overflow-visible text-center mt-2 md:mt-4">
                             <span className="text-7xl md:text-9xl lg:text-[11rem] font-black uppercase tracking-tighter text-transparent select-none leading-none">
                                 &nbsp; {/* Invisible placeholder to hold height */}
                             </span>
@@ -80,22 +81,25 @@ function Hero() {
                         Join us to nourish communities.
                     </p>
 
-                    {/* Special Buttons */}
-                    <div className="flex flex-row gap-8 mt-32 z-20 justify-center items-center flex-wrap">
-                        {/* Primary Button */}
-                        <button className="group relative px-10 py-5 bg-[#1A1A1A] text-[#FFF5E1] font-bold text-xl rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-2xl">
-                            <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black opacity-100 group-hover:opacity-90 transition-opacity" />
-                            <span className="relative flex items-center gap-3">
-                                Donate Now <Sparkles className="w-6 h-6 text-orange-400" />
-                            </span>
-                        </button>
+                    {/* Special Buttons Container */}
+                    <div className="flex flex-row gap-6 mt-16 z-20 justify-center items-center w-full">
+                        {/* Primary Button: Donate Now */}
+                        <Link
+                            to="/create-food"
+                            className="px-12 py-4 bg-orange-500 text-black font-bold text-xl rounded-full shadow-lg hover:bg-black hover:text-orange-500 hover:scale-105 transition-all duration-300 flex items-center gap-3"
+                        >
+                            Donate Now
+                            <Sparkles className="w-5 h-5" />
+                        </Link>
 
-                        {/* Secondary Button */}
-                        <button className="group px-10 py-5 bg-white/50 border border-[#1A1A1A]/10 text-[#1A1A1A] font-bold text-xl rounded-full backdrop-blur-sm transition-all hover:bg-white/80 hover:border-[#1A1A1A]/30 shadow-sm">
-                            <span className="flex items-center gap-3">
-                                Get Involved <MoveRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                            </span>
-                        </button>
+                        {/* Secondary Button: Get Involved */}
+                        <a
+                            href="#stories"
+                            className="px-12 py-4 bg-orange-500 text-black font-bold text-xl rounded-full shadow-lg hover:bg-black hover:text-orange-500 hover:scale-105 transition-all duration-300 flex items-center gap-3"
+                        >
+                            Get Involved
+                            <MoveRight className="w-5 h-5" />
+                        </a>
                     </div>
                 </div>
             </div>

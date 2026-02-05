@@ -5,8 +5,9 @@ import { useGSAP } from "@gsap/react";
 import { ArrowDown, Play, Heart, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import TasteTicker from "../../components/home/TasteTicker";
-import FoodieAI from "../../components/home/FoodieAI";
+import FoodMoodSelector from "../../components/home/FoodMoodSelector";
 import AnnapurnaTeaser from "../../components/home/AnnapurnaTeaser";
+import Footer from "../../components/common/Footer";
 
 // Transparent Navbar Component
 const Navbar = () => {
@@ -139,6 +140,7 @@ const LandingPage = () => {
                 end: "+=300%", // Reduced from 400% for slightly faster scroll
                 scrub: 1, // Smoother scrubbing
                 pin: true,
+                anticipatePin: 1, // Reduces jitter when pinning/unpinning
             },
         });
 
@@ -215,11 +217,14 @@ const LandingPage = () => {
             {/* Taste Ticker (Reels Carousel) */}
             <TasteTicker />
 
-            {/* Foodie AI Recommendation Bot */}
-            <FoodieAI />
+            {/* Food Mood Selector */}
+            <FoodMoodSelector />
 
             {/* Annapurna Teaser */}
             <AnnapurnaTeaser />
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };

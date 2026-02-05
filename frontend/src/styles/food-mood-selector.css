@@ -1,0 +1,305 @@
+@import '../styles/theme.css';
+
+.mood-selector-section {
+    padding: var(--space-12) var(--space-6);
+    background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+    min-height: 500px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle background glow */
+.mood-selector-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.mood-selector-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+.mood-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.mood-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mood-subtitle {
+    color: #a1a1aa;
+    font-size: 1rem;
+}
+
+/* Loading State */
+.mood-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    color: #a1a1aa;
+    height: 300px;
+}
+
+/* Mood Cards Grid */
+.mood-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+    .mood-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+    }
+}
+
+/* Individual Mood Card */
+.mood-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.mood-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--mood-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mood-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: var(--mood-color);
+    box-shadow: 0 10px 40px -10px var(--mood-color);
+}
+
+.mood-card:hover::before {
+    opacity: 0.1;
+}
+
+.mood-card-selected {
+    border-color: var(--mood-color);
+    box-shadow: 0 0 30px -5px var(--mood-color);
+}
+
+.mood-card-selected::before {
+    opacity: 0.15;
+}
+
+.mood-card-emoji {
+    font-size: 2.5rem;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.mood-card:hover .mood-card-emoji {
+    transform: scale(1.2);
+}
+
+.mood-card-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: var(--mood-color);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.mood-card-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #e4e4e7;
+    position: relative;
+    z-index: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Results Section */
+.mood-results {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.results-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.results-reset-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-4);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    color: #a1a1aa;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.results-reset-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Results Carousel */
+.results-carousel {
+    display: flex;
+    gap: var(--space-4);
+    overflow-x: auto;
+    padding-bottom: var(--space-4);
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.results-carousel::-webkit-scrollbar {
+    height: 6px;
+}
+
+.results-carousel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.results-carousel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* Result Card */
+.result-card {
+    flex-shrink: 0;
+    width: 200px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.result-card:hover {
+    transform: scale(1.03);
+}
+
+.result-card-video {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 9 / 16;
+    background: #1a1a1a;
+}
+
+.result-card-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.result-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-4);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.result-card-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.result-card-partner {
+    font-size: 0.75rem;
+    color: #a1a1aa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Empty State */
+.results-empty {
+    text-align: center;
+    padding: var(--space-10);
+    color: #71717a;
+}
+
+.results-empty p:first-child {
+    font-size: 1.1rem;
+    color: #a1a1aa;
+    margin-bottom: var(--space-2);
+}
