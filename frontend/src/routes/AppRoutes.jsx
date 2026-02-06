@@ -12,8 +12,18 @@ import BottomNav from '../components/BottomNav';
 import CreateFood from '../pages/food-partner/CreateFood';
 import Profile from '../pages/food-partner/Profile';
 import UserProfile from '../pages/user/UserProfile';
+import ClaimDonation from '../pages/general/ClaimDonation';
+import Mission from '../pages/general/Mission';
 
 import Annapurna from '../pages/general/Annapurna';
+
+const ProtectedRoute = ({ children }) => {
+    const userRole = localStorage.getItem('userRole');
+    if (!userRole) {
+        return <Navigate to="/user/login" replace />;
+    }
+    return children;
+};
 
 const AppRoutes = () => {
     return (
@@ -30,17 +40,19 @@ const AppRoutes = () => {
                 <Route path="/" element={<Navigate to="/user/login" replace />} />
 
                 {/* Homepage (after login) */}
-                <Route path="/home" element={<LandingPage />} />
-                <Route path="/annapurna" element={<Annapurna />} />
+                <Route path="/home" element={<ProtectedRoute><LandingPage /></ProtectedRoute>} />
+                <Route path="/annapurna" element={<ProtectedRoute><Annapurna /></ProtectedRoute>} />
+                <Route path="/claim-donation/:id" element={<ProtectedRoute><ClaimDonation /></ProtectedRoute>} />
 
                 {/* App Content Routes */}
-                <Route path="/explore" element={<><Home /><BottomNav /></>} />
-                <Route path="/saved" element={<><Saved /><BottomNav /></>} />
-                <Route path="/create-food" element={<CreateFood />} />
-                <Route path="/food-partner/:id" element={<Profile />} />
+                <Route path="/explore" element={<ProtectedRoute><Home /><BottomNav /></ProtectedRoute>} />
+                <Route path="/saved" element={<ProtectedRoute><Saved /><BottomNav /></ProtectedRoute>} />
+                <Route path="/create-food" element={<ProtectedRoute><CreateFood /></ProtectedRoute>} />
+                <Route path="/food-partner/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
                 {/* User Profile */}
-                <Route path="/user/profile" element={<UserProfile />} />
+                <Route path="/user/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+                <Route path="/mission" element={<Mission />} />
             </Routes>
         </Router>
     )

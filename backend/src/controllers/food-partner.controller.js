@@ -15,10 +15,14 @@ async function getFoodPartnerById(req, res) {
     res.status(200).json({
         message: "Food partner retrieved successfully",
         foodPartner: {
-            ...foodPartner.toObject(),
+            _id: foodPartner._id,
+            name: foodPartner.name,
+            contactName: foodPartner.contactName,
+            phone: foodPartner.phone,
+            address: foodPartner.address,
+            email: foodPartner.email,
             foodItems: foodItemsByFoodPartner
         }
-
     });
 }
 

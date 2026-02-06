@@ -170,8 +170,8 @@ const Profile = () => {
                 {activeTab === 'posts' ? (
                     <div className="grid grid-cols-3 gap-0.5 md:gap-6 pb-20">
                         {videos.length > 0 ? (
-                            videos.map((v) => (
-                                <div key={v._id || Math.random()} className="relative aspect-[3/4] group cursor-pointer bg-gray-100">
+                            videos.map((v, index) => (
+                                <div key={v._id || index} className="relative aspect-[3/4] group cursor-pointer bg-gray-100">
                                     <video
                                         className="w-full h-full object-cover"
                                         src={v.video}
@@ -198,8 +198,8 @@ const Profile = () => {
                     /* Menu View */
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 pb-20">
                         {videos.length > 0 ? (
-                            videos.map((v) => (
-                                <div key={v._id || Math.random()} className="flex gap-4 p-4 border border-gray-100 rounded-lg hover:shadow-sm transition-shadow">
+                            videos.map((v, index) => (
+                                <div key={v._id || index} className="flex gap-4 p-4 border border-gray-100 rounded-lg hover:shadow-sm transition-shadow">
                                     <div className="w-24 h-24 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
                                         <video className="w-full h-full object-cover" src={v.video} muted></video>
                                     </div>

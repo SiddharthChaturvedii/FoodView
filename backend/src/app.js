@@ -1,6 +1,7 @@
-// create server
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const authRoutes = require('./routes/auth.routes');
 const foodRoutes = require('./routes/food.routes');
 const foodPartnerRoutes = require('./routes/food-partner.routes');
@@ -8,6 +9,17 @@ const userRoutes = require('./routes/user.routes');
 const cors = require('cors');
 
 const app = express();
+
+// Security Headers
+app.use(helmet());
+
+// Rate Limiting (Brute-force protection for Auth)
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: "Too many login/register attempts, please try again after 15 minutes"
+});
+app.use('/api/auth', authLimiter);
 
 // CORS configuration - uses environment variable for production
 const allowedOrigins = [

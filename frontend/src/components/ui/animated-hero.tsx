@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { MoveRight, Sparkles } from "lucide-react";
 
-function Hero() {
+interface HeroProps {
+    onDonateClick?: () => void;
+}
+
+function Hero({ onDonateClick }: HeroProps) {
     const [titleNumber, setTitleNumber] = useState(0);
     const titles = useMemo(
         () => ["impactful", "transparent", "compassionate", "vital", "community-led"],
@@ -31,10 +35,10 @@ function Hero() {
 
                     {/* Mission Tag */}
                     <div className="mb-12">
-                        <a href="#mission" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/40 border border-[#1A1A1A]/5 backdrop-blur-md text-base md:text-lg font-medium text-orange-800 shadow-sm hover:bg-white/60 transition-colors cursor-pointer">
+                        <Link to="/mission" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/40 border border-[#1A1A1A]/5 backdrop-blur-md text-base md:text-lg font-medium text-orange-800 shadow-sm hover:bg-white/60 transition-colors cursor-pointer">
                             <Sparkles className="w-5 h-5 text-orange-600" />
                             <span>Discover our mission</span>
-                        </a>
+                        </Link>
                     </div>
 
                     {/* TEXT CONTENT */}
@@ -44,18 +48,17 @@ function Hero() {
                             Annapurna is
                         </h1>
 
-                        {/* Rotating Text Container - Adapted from Reference */}
-                        {/* Using flex and explicit height management via &nbsp; trick + absolute positioning */}
+                        {/* Rotating Text Container */}
                         <div className="relative flex w-full justify-center overflow-visible text-center mt-2 md:mt-4">
                             <span className="text-7xl md:text-9xl lg:text-[11rem] font-black uppercase tracking-tighter text-transparent select-none leading-none">
-                                &nbsp; {/* Invisible placeholder to hold height */}
+                                &nbsp;
                             </span>
 
                             {titles.map((title, index) => (
                                 <motion.span
                                     key={index}
                                     className="absolute left-0 right-0 top-0 bottom-0 flex items-center justify-center text-7xl md:text-9xl lg:text-[11rem] font-black uppercase tracking-tighter text-orange-600 leading-none drop-shadow-sm"
-                                    initial={{ opacity: 0, y: "-100" }} // Reference code initial
+                                    initial={{ opacity: 0, y: "-100" }}
                                     transition={{ type: "spring", stiffness: 50 }}
                                     animate={
                                         titleNumber === index
@@ -84,18 +87,18 @@ function Hero() {
                     {/* Special Buttons Container */}
                     <div className="flex flex-row gap-6 mt-16 z-20 justify-center items-center w-full">
                         {/* Primary Button: Donate Now */}
-                        <Link
-                            to="/create-food"
-                            className="px-12 py-4 bg-orange-500 text-black font-bold text-xl rounded-full shadow-lg hover:bg-black hover:text-orange-500 hover:scale-105 transition-all duration-300 flex items-center gap-3"
+                        <button
+                            onClick={onDonateClick}
+                            className="px-16 py-4 bg-orange-500 text-black font-bold text-xl rounded-full shadow-lg hover:bg-black hover:text-orange-500 hover:scale-105 transition-all duration-300 flex items-center gap-3"
                         >
                             Donate Now
                             <Sparkles className="w-5 h-5" />
-                        </Link>
+                        </button>
 
                         {/* Secondary Button: Get Involved */}
                         <a
                             href="#stories"
-                            className="px-12 py-4 bg-orange-500 text-black font-bold text-xl rounded-full shadow-lg hover:bg-black hover:text-orange-500 hover:scale-105 transition-all duration-300 flex items-center gap-3"
+                            className="px-16 py-4 bg-orange-500 text-black font-bold text-xl rounded-full shadow-lg hover:bg-black hover:text-orange-500 hover:scale-105 transition-all duration-300 flex items-center gap-3"
                         >
                             Get Involved
                             <MoveRight className="w-5 h-5" />

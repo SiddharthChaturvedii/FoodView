@@ -13,6 +13,16 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
+        select: false
+    },
+    volunteerScore: {
+        type: Number,
+        default: 0
+    },
+    volunteerLevel: {
+        type: String,
+        default: "Bronze",
+        enum: ["Bronze", "Silver", "Gold", "Platinum"]
     }
 },
     {

@@ -12,7 +12,7 @@ const upload = multer({
 
 /* POST /api/food/ [protected]*/
 router.post('/',
-    authMiddleware.authFoodPartnerMiddleware,
+    authMiddleware.authAnyMiddleware,
     upload.single("video"),
     foodController.createFood)
 
@@ -37,6 +37,12 @@ router.post('/save',
 router.get('/save',
     authMiddleware.authUserMiddleware,
     foodController.getSaveFood
+)
+
+
+router.post('/claim/:foodId',
+    authMiddleware.authUserMiddleware,
+    foodController.claimDonation
 )
 
 

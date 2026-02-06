@@ -24,6 +24,7 @@ const FoodPartnerLogin = () => {
       });
 
       console.log(response.data);
+      localStorage.setItem('userRole', 'partner');
       navigate("/home");
     } catch (err) {
       // Handle error from backend

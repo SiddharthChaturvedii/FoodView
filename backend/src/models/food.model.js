@@ -16,6 +16,10 @@ const foodSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "foodpartner"
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
     likeCount: {
         type: Number,
         default: 0
@@ -40,6 +44,11 @@ const foodSchema = new mongoose.Schema({
     expiryDate: {
         type: Date,
         required: function () { return this.isDonation; }
+    },
+    location: {
+        lat: { type: Number },
+        lng: { type: Number },
+        address: { type: String }
     },
     status: {
         type: String,

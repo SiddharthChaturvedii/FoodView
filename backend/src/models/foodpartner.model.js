@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const foodPartnerSchema = new mongoose.Schema({
-    
+
     name: {
         type: String,
         required: true
@@ -25,7 +25,8 @@ const foodPartnerSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select: false
     }
 })
 

@@ -20,7 +20,7 @@ const UserLogin = () => {
     });
 
     console.log(response.data);
-
+    localStorage.setItem('userRole', 'user');
     navigate("/home"); // Redirect to home after login
 
   };
