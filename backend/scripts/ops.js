@@ -118,7 +118,7 @@ const seedDB = async () => {
 
     // Create Sample Partner
     const partner = await FoodPartner.create({
-        businessName: "Spicy Bites",
+        name: "Spicy Bites",
         contactName: "Chef Raj",
         phone: "1234567890",
         address: "123 Food Street, Mumbai",

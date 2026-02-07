@@ -10,6 +10,9 @@ const cors = require('cors');
 
 const app = express();
 
+// Trust proxy is required for secure cookies on Render/Heroku etc
+app.set('trust proxy', 1);
+
 // Security Headers
 app.use(helmet());
 
@@ -25,13 +28,16 @@ app.use('/api/auth', authLimiter);
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
-    process.env.FRONTEND_URL
+    process.env.FRONTEND_URL,
+    "https://food-view-smoky.vercel.app" // Adding explicitly as a fallback
 ].filter(Boolean);
 
 const corsOrigin = (origin, callback) => {
+    // Treat no origin (like mobile apps or curl) or allowed origins as valid
     if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
     } else {
+        console.error(`CORS Blocked: ${origin}`);
         callback(new Error('Not allowed by CORS'));
     }
 };

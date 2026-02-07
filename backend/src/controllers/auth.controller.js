@@ -32,7 +32,7 @@ async function registerUser(req, res) {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Allow cross-site in production
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     })
 
@@ -76,7 +76,7 @@ async function loginUser(req, res) {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Allow cross-site in production
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     })
 
@@ -94,7 +94,7 @@ function logoutUser(req, res) {
     res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     });
     res.status(200).json({
         message: "User logged out successfully"
@@ -134,7 +134,7 @@ async function registerFoodPartner(req, res) {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Allow cross-site in production
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     })
 
@@ -181,7 +181,7 @@ async function loginFoodPartner(req, res) {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Allow cross-site in production
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     })
 
@@ -199,7 +199,7 @@ function logoutFoodPartner(req, res) {
     res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     });
     res.status(200).json({
         message: "Food partner logged out successfully"

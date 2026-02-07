@@ -1,0 +1,21 @@
+--- MONGODB LOCAL REPORT ---
+
+Database: food-view
+  - likes: 2
+  - users: 1
+  - saves: 4
+  - foodpartners: 1
+    * Spicy Bites
+  - foods: 3
+    * Spicy Schezwan Noodles
+    * Chocolate Lava Cake
+    * Vegetable Momos
+
+Database: hackathon
+  - users: 1
+  - foodpartners: 1
+    * Spicy Bites
+  - foods: 3
+    * Spicy Schezwan Noodles
+    * Chocolate Lava Cake
+    * Vegetable Momos
