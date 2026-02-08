@@ -228,12 +228,12 @@ const Annapurna = () => {
                                 </h3>
                                 <p className="text-sm text-gray-600 mb-4">Scan to contribute directly.</p>
                                 <div className="bg-white p-2 rounded-xl border border-dashed border-gray-300 flex justify-center overflow-hidden relative">
-                                    <div className="w-56 h-56 relative overflow-hidden rounded-lg bg-white flex items-center justify-center">
-                                        {/* QR Code - Adjusted for visibility */}
+                                    <div className="w-56 relative rounded-lg bg-white flex items-center justify-center">
+                                        {/* QR Code - Full aspect ratio */}
                                         <img
                                             src={qrImg}
                                             alt="UPI QR Code"
-                                            className="w-full h-full object-cover scale-150 transform translate-y-6"
+                                            className="w-full h-auto object-contain"
                                         />
                                     </div>
                                 </div>
@@ -382,7 +382,7 @@ const Annapurna = () => {
                     {/* Story 2 */}
                     <div className="bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/50 transition-all shadow-2xl">
                         <img
-                            src="https://images.unsplash.com/photo-1593113598340-1509de0bc1c41?q=80&w=2670&auto=format&fit=crop"
+                            src="https://images.unsplash.com/photo-1613638377394-281765460baa?q=80&w=2670&auto=format&fit=crop"
                             alt="Restaurant owner"
                             className="w-full h-56 object-cover"
                         />
@@ -401,8 +401,8 @@ const Annapurna = () => {
                     {/* Story 3 */}
                     <div className="bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/50 transition-all shadow-2xl">
                         <img
-                            src="https://images.unsplash.com/photo-1504159506876-791895319ca5?q=80&w=2671&auto=format&fit=crop"
-                            alt="Community meal"
+                            src="https://images.unsplash.com/photo-1556911073-38141963c9e0?q=80&w=2670&auto=format&fit=crop"
+                            alt="Community members"
                             className="w-full h-56 object-cover"
                         />
                         <div className="p-6">
