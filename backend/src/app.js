@@ -28,8 +28,9 @@ app.use('/api/auth', authLimiter);
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
+    "http://localhost:3000",
     process.env.FRONTEND_URL,
-    "https://food-view-smoky.vercel.app" // Adding explicitly as a fallback
+    "https://food-view-smoky.vercel.app"
 ].filter(Boolean);
 
 const corsOrigin = (origin, callback) => {
@@ -37,7 +38,7 @@ const corsOrigin = (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
     } else {
-        console.error(`CORS Blocked: ${origin}`);
+        console.warn(`CORS Blocked: ${origin}`); // Changed to warn to reduce noise
         callback(new Error('Not allowed by CORS'));
     }
 };

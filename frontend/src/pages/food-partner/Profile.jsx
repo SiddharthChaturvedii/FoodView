@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import api from '../../utils/api'
-import { PlusCircle, MapPin, Phone, Mail, Grid, Utensils, Users } from 'lucide-react'
+import { PlusCircle, MapPin, Phone, Mail, Grid, Utensils, Users, AlertCircle, RefreshCw } from 'lucide-react'
 
 const Profile = () => {
     const { id } = useParams()
@@ -23,7 +23,7 @@ const Profile = () => {
                 setLoading(false)
             })
             .catch(err => {
-                console.error("Error fetching profile:", err)
+                // Error is displayed in UI
                 setError("Failed to load profile.")
                 setLoading(false)
             })
@@ -46,8 +46,22 @@ const Profile = () => {
     if (error) {
         return (
             <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
-                <div className="text-center text-red-500 text-lg font-medium">{error}</div>
-                <Link to="/home" className="mt-4 text-orange-600 hover:underline">Return Home</Link>
+                <div className="bg-red-50 p-6 rounded-2xl flex flex-col items-center max-w-sm text-center">
+                    <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">Oops! Something went wrong</h2>
+                    <p className="text-gray-600 mb-6">{error}</p>
+                    <div className="flex gap-3">
+                        <Link to="/home" className="px-4 py-2 bg-gray-100 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
+                            Go Home
+                        </Link>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="px-4 py-2 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+                        >
+                            <RefreshCw size={18} /> Retry
+                        </button>
+                    </div>
+                </div>
             </div>
         )
     }

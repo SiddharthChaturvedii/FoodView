@@ -22,6 +22,10 @@ const CreateFood = () => {
     const [isLocating, setIsLocating] = useState(false);
     const [locationError, setLocationError] = useState('');
 
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
     const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
@@ -94,6 +98,9 @@ const CreateFood = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError('');
+        setSuccessMessage('');
 
         const formData = new FormData();
 
@@ -120,14 +127,24 @@ const CreateFood = () => {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
-            console.log(response.data);
+            // console.log(response.data);
+            setSuccessMessage('✅ Food saved successfully! Redirecting...');
 
             // Redirect to the food partner's profile page after successful creation
             const foodPartnerId = response.data.food.foodPartner;
-            navigate(`/food-partner/${foodPartnerId}`);
+            setTimeout(() => {
+                navigate(`/food-partner/${foodPartnerId}`);
+            }, 1500);
+
         } catch (error) {
-            console.error("Error creating food:", error);
-            alert("Failed to save food. Please try again.");
+            // Error handled in UI
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("Failed to save food. Please check your connection and try again.");
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -146,6 +163,9 @@ const CreateFood = () => {
                     <h1 className="create-food-title">Create Food</h1>
                     <p className="create-food-subtitle">Upload a short video, give it a name, and add a description.</p>
                 </header>
+
+                {error && <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">{error}</div>}
+                {successMessage && <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">{successMessage}</div>}
 
                 <form className="create-food-form" onSubmit={onSubmit}>
                     {/* TOGGLE SWITCH: Sell vs Donate (Hidden for Users) */}
@@ -355,12 +375,16 @@ const CreateFood = () => {
                         <button
                             className={`btn-primary w-full py-3 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all ${isDonation ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-200 shadow-lg' : ''}`}
                             type="submit"
-                            disabled={isDisabled}
+                            disabled={isDisabled || isLoading}
                         >
-                            {isDonation ? (
-                                <>Donate Food <Heart className="w-5 h-5 fill-white" /></>
+                            {isLoading ? (
+                                <>Saving... <Loader2 className="w-5 h-5 animate-spin" /></>
                             ) : (
-                                "Save Food"
+                                isDonation ? (
+                                    <>Donate Food <Heart className="w-5 h-5 fill-white" /></>
+                                ) : (
+                                    "Save Food"
+                                )
                             )}
                         </button>
                     </div>

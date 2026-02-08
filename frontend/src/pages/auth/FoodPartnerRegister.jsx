@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth-shared.css';
 import AuthLayout from '../../components/auth/AuthLayout';
@@ -9,8 +9,15 @@ const FoodPartnerRegister = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccessMessage('');
+    setIsLoading(true);
 
     const businessName = e.target.businessName.value;
     const contactName = e.target.contactName.value;
@@ -19,21 +26,32 @@ const FoodPartnerRegister = () => {
     const password = e.target.password.value;
     const address = e.target.address.value;
 
-    api.post("/api/auth/food-partner/register", {
-      name: businessName,
-      contactName,
-      phone,
-      email,
-      password,
-      address
-    })
-      .then(response => {
-        console.log(response.data);
-        navigate("/create-food"); // Redirect to create food page after successful registration
-      })
-      .catch(error => {
-        console.error("There was an error registering!", error);
+    try {
+      const response = await api.post("/api/auth/food-partner/register", {
+        name: businessName,
+        contactName,
+        phone,
+        email,
+        password,
+        address
       });
+
+      // console.log(response.data);
+      setSuccessMessage('✅ Account created! Redirecting...');
+      setTimeout(() => {
+        navigate("/create-food");
+      }, 2000);
+
+    } catch (err) {
+      // Error handled in UI
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Registration failed. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,6 +64,10 @@ const FoodPartnerRegister = () => {
         <nav className="auth-alt-action" style={{ marginTop: '-4px' }}>
           <strong style={{ fontWeight: 600 }}>Switch:</strong> <Link to="/user/register">User</Link> • <Link to="/food-partner/register">Food partner</Link>
         </nav>
+
+        {error && <div className="auth-error-box">{error}</div>}
+        {successMessage && <div className="auth-success-box">{successMessage}</div>}
+
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="field-group">
             <label htmlFor="businessName">Business Name</label>
@@ -74,7 +96,9 @@ const FoodPartnerRegister = () => {
             <input id="address" name="address" placeholder="123 Market Street" autoComplete="street-address" />
             <p className="small-note">Full address helps customers find you faster.</p>
           </div>
-          <button className="auth-submit" type="submit">Create Partner Account</button>
+          <button className="auth-submit" type="submit" disabled={isLoading}>
+            {isLoading ? 'Creating Account...' : 'Create Partner Account'}
+          </button>
         </form>
         <div className="auth-alt-action">
           Already a partner? <Link to="/food-partner/login">Sign in</Link>
