@@ -12,9 +12,10 @@ const Mission = () => {
                     <Heart className="w-8 h-8 text-orange-600 fill-orange-600" />
                     FOODVIEW
                 </Link>
-                <Link to="/home" className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-sm font-bold hover:bg-orange-600 transition-colors">
+                <Link to="/home" className="flex items-center gap-2 px-3 py-2 sm:px-4 bg-black text-white rounded-full text-xs sm:text-sm font-bold hover:bg-orange-600 transition-colors">
                     <ArrowLeft className="w-4 h-4" />
-                    Back to Feed
+                    <span className="hidden sm:inline">Back to Feed</span>
+                    <span className="sm:hidden">Back</span>
                 </Link>
             </nav>
 
@@ -44,7 +45,7 @@ const Mission = () => {
                 <div className="max-w-5xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
                         <div>
-                            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-8 leading-none">
+                            <h2 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter mb-8 leading-none">
                                 Our<br />Manifesto
                             </h2>
                             <div className="space-y-6 text-xl text-gray-700 leading-relaxed">
@@ -89,7 +90,7 @@ const Mission = () => {
             <section className="bg-red-600 py-24 text-white">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
-                        <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-12">
+                        <h2 className="text-3xl sm:text-5xl md:text-8xl font-black uppercase tracking-tighter mb-12">
                             Emergency Support
                         </h2>
                         <p className="text-xl md:text-2xl mb-16 font-medium opacity-90">
@@ -130,12 +131,12 @@ const Mission = () => {
 
             {/* Final CTA */}
             <section className="py-32 text-center bg-white">
-                <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-12">Join the mission</h2>
-                <div className="flex flex-col md:flex-row gap-6 justify-center px-4">
-                    <Link to="/home" className="px-12 py-5 bg-orange-500 text-black font-black text-2xl rounded-full hover:bg-black hover:text-orange-500 transition-all shadow-xl">
+                <h2 className="text-4xl sm:text-6xl md:text-9xl font-black uppercase tracking-tighter mb-12 px-4">Join the mission</h2>
+                <div className="flex flex-col md:flex-row gap-4 sm:gap-6 justify-center px-4">
+                    <Link to="/home" className="px-8 sm:px-12 py-4 sm:py-5 bg-orange-500 text-black font-black text-lg sm:text-2xl rounded-full hover:bg-black hover:text-orange-500 transition-all shadow-xl">
                         START DONATING
                     </Link>
-                    <Link to="/home" className="px-12 py-5 border-4 border-black text-black font-black text-2xl rounded-full hover:bg-black hover:text-white transition-all">
+                    <Link to="/home" className="px-8 sm:px-12 py-4 sm:py-5 border-4 border-black text-black font-black text-lg sm:text-2xl rounded-full hover:bg-black hover:text-white transition-all">
                         BECOME A PARTNER
                     </Link>
                 </div>

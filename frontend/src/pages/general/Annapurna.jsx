@@ -359,7 +359,7 @@ const Annapurna = () => {
             {/* 4. Impact Stories */}
             <section className="annapurna-section" id="stories">
                 <h2 className="section-title">Voices of Change 🧡</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-none px-6 md:px-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 w-full max-w-none px-4 sm:px-6 md:px-12">
                     {/* Story 1 */}
                     <div className="bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/5 hover:border-orange-500/50 transition-all shadow-2xl">
                         <img
