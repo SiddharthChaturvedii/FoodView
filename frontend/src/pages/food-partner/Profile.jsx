@@ -11,11 +11,18 @@ const Profile = () => {
     const [error, setError] = useState(null)
     const [activeTab, setActiveTab] = useState('posts')
     const [shareText, setShareText] = useState('Share')
+    const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
         if (!id) return;
 
         setLoading(true);
+
+        // Check if current user is the owner of this profile
+        const userRole = localStorage.getItem('userRole');
+        const currentUserId = localStorage.getItem('userId');
+        setIsOwner(userRole === 'foodPartner' && currentUserId === id);
+
         api.get(`/api/food-partner/${id}`)
             .then(response => {
                 setProfile(response.data.foodPartner)
@@ -102,10 +109,12 @@ const Profile = () => {
                             </h1>
                             {/* Action Buttons */}
                             <div className="flex gap-3">
-                                <Link to="/create-food" className="bg-gradient-to-r from-orange-500 to-orange-600 hover:shadow-lg text-white px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
-                                    <PlusCircle size={16} />
-                                    <span>Create</span>
-                                </Link>
+                                {isOwner && (
+                                    <Link to="/create-food" className="bg-gradient-to-r from-orange-500 to-orange-600 hover:shadow-lg text-white px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
+                                        <PlusCircle size={16} />
+                                        <span>Create</span>
+                                    </Link>
+                                )}
                                 <button
                                     onClick={handleShare}
                                     className="bg-white hover:bg-gray-50 border border-[#DBC1A0] text-gray-800 px-5 py-2 rounded-full text-sm font-semibold transition-colors min-w-[90px] flex items-center gap-2 justify-center"
