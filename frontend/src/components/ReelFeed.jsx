@@ -1,9 +1,41 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+
+// Character limit for truncated description (roughly 2-3 lines)
+const DESCRIPTION_CHAR_LIMIT = 100
+
+// Component for expandable description
+const ExpandableDescription = ({ text }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  if (!text) return null
+
+  const shouldTruncate = text.length > DESCRIPTION_CHAR_LIMIT
+  const displayText = isExpanded || !shouldTruncate
+    ? text
+    : text.slice(0, DESCRIPTION_CHAR_LIMIT).trim() + '...'
+
+  return (
+    <p className="reel-description">
+      {displayText}
+      {shouldTruncate && (
+        <button
+          className="reel-description-toggle"
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsExpanded(!isExpanded)
+          }}
+        >
+          {isExpanded ? ' less' : ' more'}
+        </button>
+      )}
+    </p>
+  )
+}
 
 // Reusable feed for vertical reels
 // Props:
-// - items: Array of video items { _id, video, description, likeCount, savesCount, commentsCount, comments, foodPartner }
+// - items: Array of video items { _id, video, description, likeCount, savesCount, foodPartner }
 // - onLike: (item) => void | Promise<void>
 // - onSave: (item) => void | Promise<void>
 // - emptyMessage: string
@@ -88,7 +120,7 @@ const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' 
 
               <div className="reel-content">
                 <h3 className="reel-title">{item.name}</h3>
-                <p className="reel-description" title={item.description}>{item.description}</p>
+                <ExpandableDescription text={item.description} />
                 {item.foodPartner && (
                   <Link className="reel-btn" to={"/food-partner/" + item.foodPartner._id} aria-label="Visit store">Visit store</Link>
                 )}
