@@ -66,40 +66,48 @@ async function likeFood(req, res) {
     const { foodId } = req.body;
     const user = req.user;
 
-    const isAlreadyLiked = await likeModel.findOne({
-        user: user._id,
-        food: foodId
-    })
-
-    if (isAlreadyLiked) {
-        await likeModel.deleteOne({
+    try {
+        const isAlreadyLiked = await likeModel.findOne({
             user: user._id,
             food: foodId
-        })
+        });
 
-        await foodModel.findByIdAndUpdate(foodId, {
-            $inc: { likeCount: -1 }
-        })
+        if (isAlreadyLiked) {
+            // Unlike: remove the like
+            await likeModel.deleteOne({
+                user: user._id,
+                food: foodId
+            });
 
-        return res.status(200).json({
-            message: "Food unliked successfully"
-        })
+            const updatedFood = await foodModel.findByIdAndUpdate(foodId, {
+                $inc: { likeCount: -1 }
+            }, { new: true });
+
+            return res.status(200).json({
+                message: "Food unliked successfully",
+                isLiked: false,
+                likeCount: updatedFood.likeCount
+            });
+        }
+
+        // Like: create new like
+        await likeModel.create({
+            user: user._id,
+            food: foodId
+        });
+
+        const updatedFood = await foodModel.findByIdAndUpdate(foodId, {
+            $inc: { likeCount: 1 }
+        }, { new: true });
+
+        res.status(201).json({
+            message: "Food liked successfully",
+            isLiked: true,
+            likeCount: updatedFood.likeCount
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error processing like", error: error.message });
     }
-
-    const like = await likeModel.create({
-        user: user._id,
-        food: foodId
-    })
-
-    await foodModel.findByIdAndUpdate(foodId, {
-        $inc: { likeCount: 1 }
-    })
-
-    res.status(201).json({
-        message: "Food liked successfully",
-        like
-    })
-
 }
 
 async function saveFood(req, res) {

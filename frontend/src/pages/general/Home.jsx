@@ -24,14 +24,17 @@ const Home = () => {
   // ... (rest of functions)
 
   async function likeVideo(item) {
-    const response = await api.post("/api/food/like", { foodId: item._id })
+    try {
+      const response = await api.post("/api/food/like", { foodId: item._id });
 
-    if (response.data.like) {
-      console.log("Video liked");
-      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
-    } else {
-      console.log("Video unliked");
-      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
+      // Use authoritative likeCount from backend
+      setVideos((prev) => prev.map((v) =>
+        v._id === item._id
+          ? { ...v, likeCount: response.data.likeCount }
+          : v
+      ));
+    } catch (error) {
+      // Silently handle error - could add toast notification here
     }
   }
 
