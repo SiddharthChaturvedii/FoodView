@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import api from '../../utils/api'
-import { PlusCircle, MapPin, Phone, Mail, Grid, Utensils, AlertCircle, RefreshCw, Share2, Pencil, X, Camera } from 'lucide-react'
+import { PlusCircle, MapPin, Phone, Mail, Grid, Utensils, AlertCircle, RefreshCw, Share2, Pencil, X, Camera, LogOut } from 'lucide-react'
 
 const Profile = () => {
     const { id } = useParams()
+    const navigate = useNavigate()
     const [profile, setProfile] = useState(null)
     const [videos, setVideos] = useState([])
     const [loading, setLoading] = useState(true)
@@ -44,6 +45,15 @@ const Profile = () => {
         navigator.clipboard.writeText(window.location.href);
         setShareText('Copied!');
         setTimeout(() => setShareText('Share'), 2000);
+    }
+
+    const handleLogout = async () => {
+        try {
+            await api.get('/api/auth/food-partner/logout');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userId');
+            navigate('/food-partner/login');
+        } catch (error) { /* noop */ }
     }
 
     const openEditModal = () => {
@@ -181,6 +191,13 @@ const Profile = () => {
                                         >
                                             <Pencil size={14} />
                                             Edit Profile
+                                        </button>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 px-5 py-2 rounded-full text-sm font-semibold transition-colors flex items-center gap-2"
+                                        >
+                                            <LogOut size={14} />
+                                            Logout
                                         </button>
                                     </>
                                 )}

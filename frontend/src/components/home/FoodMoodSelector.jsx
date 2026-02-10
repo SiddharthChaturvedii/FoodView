@@ -4,7 +4,7 @@ import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { Flame, Cake, Salad, Beef, Leaf, Utensils, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 
-// Mood definitions with keywords to match in name/description
+// Mood definitions with broad keywords to match in name/description
 const MOODS = [
     {
         id: 'spicy',
@@ -13,7 +13,7 @@ const MOODS = [
         icon: Flame,
         color: '#ef4444',
         gradient: 'linear-gradient(135deg, #ef4444, #f97316)',
-        keywords: ['spicy', 'hot', 'chili', 'pepper', 'fire', 'schezwan', 'tandoori', 'masala']
+        keywords: ['spicy', 'hot', 'chili', 'chilli', 'pepper', 'fire', 'schezwan', 'szechuan', 'tandoori', 'masala', 'jalapeño', 'sriracha', 'buffalo', 'vindaloo', 'curry', 'tikka', 'habanero', 'wasabi', 'kimchi', 'sambal', 'harissa', 'cayenne', 'bhut', 'ghost']
     },
     {
         id: 'sweet',
@@ -22,7 +22,7 @@ const MOODS = [
         icon: Cake,
         color: '#ec4899',
         gradient: 'linear-gradient(135deg, #ec4899, #f472b6)',
-        keywords: ['sweet', 'cake', 'chocolate', 'dessert', 'ice cream', 'pastry', 'sugar', 'honey', 'velvet']
+        keywords: ['sweet', 'cake', 'chocolate', 'dessert', 'ice cream', 'icecream', 'pastry', 'sugar', 'honey', 'velvet', 'brownie', 'cookie', 'cupcake', 'donut', 'doughnut', 'waffle', 'pancake', 'pudding', 'caramel', 'vanilla', 'strawberry', 'mango', 'fruit', 'treacle', 'custard', 'mousse', 'tart', 'pie', 'gulab', 'jalebi', 'rasgulla', 'ladoo', 'barfi', 'halwa', 'kheer']
     },
     {
         id: 'healthy',
@@ -31,7 +31,7 @@ const MOODS = [
         icon: Salad,
         color: '#22c55e',
         gradient: 'linear-gradient(135deg, #22c55e, #84cc16)',
-        keywords: ['healthy', 'salad', 'fresh', 'green', 'organic', 'light', 'garden', 'vegetable', 'harvest']
+        keywords: ['healthy', 'salad', 'fresh', 'green', 'organic', 'light', 'garden', 'vegetable', 'harvest', 'quinoa', 'avocado', 'smoothie', 'juice', 'detox', 'protein', 'bowl', 'grain', 'oat', 'seed', 'nut', 'sprout', 'kale', 'spinach', 'broccoli', 'acai', 'lean', 'grilled', 'steamed', 'poha', 'upma', 'dal', 'lentil', 'muesli', 'granola']
     },
     {
         id: 'comfort',
@@ -40,7 +40,7 @@ const MOODS = [
         icon: Beef,
         color: '#f59e0b',
         gradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-        keywords: ['comfort', 'burger', 'fries', 'cheese', 'pasta', 'noodles', 'pizza', 'heritage', 'nonna']
+        keywords: ['comfort', 'burger', 'fries', 'cheese', 'pasta', 'noodles', 'pizza', 'heritage', 'nonna', 'mac', 'grilled cheese', 'sandwich', 'wrap', 'taco', 'quesadilla', 'fried', 'crispy', 'crunchy', 'loaded', 'melt', 'steak', 'chicken', 'wings', 'biryani', 'pulao', 'paratha', 'roti', 'naan', 'butter', 'paneer', 'chole', 'samosa', 'pakora', 'momos', 'chow', 'maggi', 'rice']
     },
     {
         id: 'vegan',
@@ -49,7 +49,7 @@ const MOODS = [
         icon: Leaf,
         color: '#10b981',
         gradient: 'linear-gradient(135deg, #10b981, #34d399)',
-        keywords: ['vegan', 'plant', 'tofu', 'vegetarian', 'veggie', 'zen', 'artisan']
+        keywords: ['vegan', 'plant', 'tofu', 'vegetarian', 'veggie', 'zen', 'artisan', 'soy', 'tempeh', 'seitan', 'mushroom', 'jackfruit', 'chickpea', 'hummus', 'falafel', 'lentil', 'bean', 'cashew', 'almond', 'coconut', 'oat milk', 'dairy-free', 'eggless', 'herbal', 'raw', 'veg']
     },
     {
         id: 'seafood',
@@ -58,7 +58,7 @@ const MOODS = [
         icon: Utensils,
         color: '#0ea5e9',
         gradient: 'linear-gradient(135deg, #0ea5e9, #38bdf8)',
-        keywords: ['seafood', 'fish', 'shrimp', 'sushi', 'sashimi', 'roll', 'ocean', 'sea']
+        keywords: ['seafood', 'fish', 'shrimp', 'sushi', 'sashimi', 'roll', 'ocean', 'sea', 'prawn', 'lobster', 'crab', 'salmon', 'tuna', 'oyster', 'clam', 'mussel', 'calamari', 'squid', 'grilled fish', 'fish fry', 'ceviche', 'poke', 'mahi', 'tilapia', 'cod', 'anchovy', 'mackerel']
     }
 ];
 
@@ -67,6 +67,7 @@ const FoodMoodSelector = () => {
     const [loading, setLoading] = useState(true);
     const [selectedMood, setSelectedMood] = useState(null);
     const [filteredFoods, setFilteredFoods] = useState([]);
+    const [isFallback, setIsFallback] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const resultsRef = useRef(null);
     const navigate = useNavigate();
@@ -92,7 +93,16 @@ const FoodMoodSelector = () => {
             return mood.keywords.some(keyword => searchText.includes(keyword.toLowerCase()));
         });
 
-        setFilteredFoods(matches);
+        if (matches.length > 0) {
+            setFilteredFoods(matches);
+            setIsFallback(false);
+        } else {
+            // Fallback: show random foods when no keyword matches
+            const shuffled = [...foods].sort(() => Math.random() - 0.5);
+            setFilteredFoods(shuffled.slice(0, Math.min(6, shuffled.length)));
+            setIsFallback(true);
+        }
+
         setShowResults(true);
 
         // Scroll to results after a short delay
@@ -105,6 +115,7 @@ const FoodMoodSelector = () => {
         setSelectedMood(null);
         setFilteredFoods([]);
         setShowResults(false);
+        setIsFallback(false);
     };
 
     const handleFoodClick = () => {
@@ -165,7 +176,7 @@ const FoodMoodSelector = () => {
                     <div ref={resultsRef} className="mood-results">
                         <div className="results-header">
                             <h3 className="results-title">
-                                {selectedMood?.emoji} {selectedMood?.label} Picks
+                                {selectedMood?.emoji} {isFallback ? 'Try These Instead' : `${selectedMood?.label} Picks`}
                             </h3>
                             <button className="results-reset-btn" onClick={handleReset}>
                                 <ChevronLeft className="w-4 h-4" />
@@ -197,7 +208,7 @@ const FoodMoodSelector = () => {
                                                     e.target.parentElement.classList.add('video-error');
                                                 }}
                                             />
-                                            {/* Fallback for video error (handled via CSS or state, but simple CSS hide is easier) */}
+                                            {/* Fallback for video error */}
                                             <div className="video-fallback absolute inset-0 flex items-center justify-center bg-gray-800 -z-10">
                                                 <Utensils className="w-8 h-8 text-gray-600" />
                                             </div>
@@ -214,8 +225,8 @@ const FoodMoodSelector = () => {
                             </div>
                         ) : (
                             <div className="results-empty">
-                                <p>No {selectedMood?.label.toLowerCase()} dishes found yet.</p>
-                                <p className="text-sm text-gray-500">Try another mood or check back later!</p>
+                                <p>No dishes found yet.</p>
+                                <p className="text-sm text-gray-500">Check back later as new dishes are added!</p>
                             </div>
                         )}
                     </div>

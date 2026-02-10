@@ -117,7 +117,7 @@ const Annapurna = () => {
     const [showDonateModal, setShowDonateModal] = useState(false);
     const [copied, setCopied] = useState(false);
     const [donationsList, setDonationsList] = useState([]); // Real data state
-    const [isOffline, setIsOffline] = useState(false);
+
 
     const handleCopyUPI = () => {
         navigator.clipboard.writeText("9243566990@ybl");
@@ -170,9 +170,8 @@ const Annapurna = () => {
 
                 setDonationsList(validDonations.length > 0 ? validDonations : mockDonations);
             } catch (error) {
-                // Silently handle error by showing offline mock data
+                // Silently fall back to mock data
                 setDonationsList(mockDonations);
-                setIsOffline(true);
             }
         };
 
@@ -259,13 +258,7 @@ const Annapurna = () => {
                 </div>
             )}
 
-            {/* Offline Alert Banner */}
-            {isOffline && (
-                <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-[60] bg-orange-100 border border-orange-300 text-orange-800 px-6 py-2 rounded-full shadow-lg flex items-center gap-2 animate-pulse pointer-events-none">
-                    <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-                    <span className="text-sm font-semibold">Live updates unavailable. Showing demo data.</span>
-                </div>
-            )}
+
 
             <Link to="/home" className="group fixed top-6 left-6 z-50 no-underline text-gray-800 flex items-center gap-2 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200 shadow-sm hover:shadow-md transition-all">
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />

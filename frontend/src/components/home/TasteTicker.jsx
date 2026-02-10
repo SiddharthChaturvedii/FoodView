@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import '../../styles/taste-ticker.css';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
-import { Flame } from 'lucide-react';
+import { Flame, Film } from 'lucide-react';
 
 const TasteTicker = () => {
     const [foods, setFoods] = useState([]);
@@ -13,9 +13,7 @@ const TasteTicker = () => {
     useEffect(() => {
         const fetchFoods = async () => {
             try {
-                // Fetch existing food items
                 const response = await api.get('/api/food');
-                // We want enough items to scroll smoothly, so we might duplicate them if there are few
                 const items = response.data.foodItems || [];
                 setFoods(items);
             } catch (error) {
@@ -28,12 +26,58 @@ const TasteTicker = () => {
         fetchFoods();
     }, []);
 
-    if (loading) return null; // Or a skeleton loader
-    if (foods.length === 0) return null;
+    // IntersectionObserver for mobile autoplay
+    useEffect(() => {
+        if (foods.length === 0) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const video = entry.target;
+                    if (!(video instanceof HTMLVideoElement)) return;
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => { /* autoplay blocked */ });
+                    } else {
+                        video.pause();
+                        video.currentTime = 0;
+                    }
+                });
+            },
+            { threshold: 0.3 }
+        );
+
+        // Observe after a short delay to let DOM render
+        const timer = setTimeout(() => {
+            const videos = document.querySelectorAll('.ticker-video');
+            videos.forEach((v) => observer.observe(v));
+        }, 200);
+
+        return () => {
+            clearTimeout(timer);
+            observer.disconnect();
+        };
+    }, [foods]);
+
+    if (loading) return null;
+
+    // Empty state instead of returning null
+    if (foods.length === 0) {
+        return (
+            <section className="taste-ticker-container">
+                <h2 className="taste-ticker-header">
+                    <Flame className="text-orange-500" fill="currentColor" />
+                    Trending Now
+                </h2>
+                <div className="taste-ticker-empty">
+                    <Film className="w-8 h-8 text-gray-500" />
+                    <p>No reels yet — check back soon!</p>
+                </div>
+            </section>
+        );
+    }
 
     // Duplicate list for seamless loop
     const displayFoods = [...foods, ...foods, ...foods, ...foods];
-    // If list is small, we duplicate more times to ensure it fills the width
 
     const handleCardClick = () => {
         navigate('/explore');
@@ -62,11 +106,8 @@ const TasteTicker = () => {
                                 className="ticker-video"
                                 muted
                                 loop
-                                onMouseEnter={(e) => e.target.play()}
-                                onMouseLeave={(e) => {
-                                    e.target.pause();
-                                    e.target.currentTime = 0;
-                                }}
+                                playsInline
+                                preload="metadata"
                             />
                             <div className="ticker-overlay">
                                 <span className="ticker-food-name line-clamp-2">{food.name}</span>

@@ -101,3 +101,22 @@
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.8);
 }
+
+/* Empty state */
+.taste-ticker-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: var(--space-8) var(--space-6);
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .taste-ticker-track {
+        animation: none;
+    }
+}

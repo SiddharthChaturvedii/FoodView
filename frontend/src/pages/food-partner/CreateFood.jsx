@@ -83,11 +83,24 @@ const CreateFood = () => {
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 const { latitude, longitude } = position.coords;
-                // Ideally, here you would call a reverse geocoding API to get the address
-                // For now, we'll set the coords and ask user to confirm address
                 setLocation(prev => ({ ...prev, lat: latitude, lng: longitude }));
+
+                // Reverse geocode to auto-fill address
+                try {
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+                        { headers: { 'Accept-Language': 'en' } }
+                    );
+                    const data = await response.json();
+                    if (data.display_name) {
+                        setLocation(prev => ({ ...prev, address: data.display_name }));
+                    }
+                } catch (geoError) {
+                    // Silently fail — user can still type the address manually
+                    console.error("Reverse geocoding failed:", geoError);
+                }
+
                 setIsLocating(false);
-                // Optional: Auto-fill address placeholder or fetch from API
             },
             (error) => {
                 setLocationError("Unable to retrieve your location");
