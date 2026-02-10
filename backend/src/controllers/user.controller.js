@@ -1,6 +1,8 @@
 const userModel = require('../models/user.model');
 const likeModel = require('../models/likes.model');
 const saveModel = require('../models/save.model');
+const storageService = require('../services/storage.service');
+const { v4: uuid } = require('uuid');
 
 // Get current logged-in user's profile
 async function getUserProfile(req, res) {
@@ -17,6 +19,7 @@ async function getUserProfile(req, res) {
                 _id: user._id,
                 fullName: user.fullName,
                 email: user.email,
+                profilePhoto: user.profilePhoto || '',
                 createdAt: user.createdAt,
                 likedCount,
                 savedCount
@@ -46,7 +49,49 @@ async function getUserLikedFoods(req, res) {
     }
 }
 
+// Update user profile (name and optionally profile photo)
+async function updateUserProfile(req, res) {
+    try {
+        const user = req.user;
+        const updates = {};
+
+        // Only update fields that are provided
+        if (req.body.fullName) {
+            updates.fullName = req.body.fullName;
+        }
+
+        // Handle profile photo upload
+        if (req.file) {
+            const uploadResult = await storageService.uploadFile(req.file.buffer, uuid());
+            updates.profilePhoto = uploadResult.url;
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ message: "No fields to update" });
+        }
+
+        const updatedUser = await userModel.findByIdAndUpdate(
+            user._id,
+            { $set: updates },
+            { new: true }
+        );
+
+        res.status(200).json({
+            message: "Profile updated successfully",
+            user: {
+                _id: updatedUser._id,
+                fullName: updatedUser.fullName,
+                email: updatedUser.email,
+                profilePhoto: updatedUser.profilePhoto || ''
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating profile", error: error.message });
+    }
+}
+
 module.exports = {
     getUserProfile,
-    getUserLikedFoods
+    getUserLikedFoods,
+    updateUserProfile
 };

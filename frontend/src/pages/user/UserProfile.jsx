@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, Bookmark, LogOut, ArrowLeft, User } from 'lucide-react';
+import { Heart, Bookmark, LogOut, ArrowLeft, User, Pencil, X, Camera } from 'lucide-react';
 import api from '../../utils/api';
 import '../food-partner/../../styles/profile.css';
 
@@ -8,35 +8,71 @@ const UserProfile = () => {
     const [profile, setProfile] = useState(null);
     const [likedFoods, setLikedFoods] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editForm, setEditForm] = useState({ fullName: '' });
+    const [photoPreview, setPhotoPreview] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const fileInputRef = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch user profile
         api.get('/api/user/profile')
             .then(response => {
                 setProfile(response.data.user);
+                setEditForm({ fullName: response.data.user.fullName || '' });
             })
-            .catch(err => {
-                // Error handled silently
-            });
+            .catch(() => { });
 
-        // Fetch liked foods
         api.get('/api/user/liked')
             .then(response => {
                 setLikedFoods(response.data.likedFoods || []);
                 setIsLoading(false);
             })
-            .catch(err => {
-                setIsLoading(false);
-            });
+            .catch(() => setIsLoading(false));
     }, []);
 
     const handleLogout = async () => {
         try {
             await api.get('/api/auth/user/logout');
             navigate('/user/login');
+        } catch (error) { /* noop */ }
+    };
+
+    const openEditModal = () => {
+        setEditForm({ fullName: profile?.fullName || '' });
+        setPhotoPreview(null);
+        setShowEditModal(true);
+    };
+
+    const handlePhotoSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPhotoPreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleSaveProfile = async (e) => {
+        e.preventDefault();
+        setIsSaving(true);
+        try {
+            const formData = new FormData();
+            if (editForm.fullName !== profile.fullName) {
+                formData.append('fullName', editForm.fullName);
+            }
+            if (fileInputRef.current?.files[0]) {
+                formData.append('profilePhoto', fileInputRef.current.files[0]);
+            }
+
+            const response = await api.put('/api/user/profile', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            setProfile(prev => ({ ...prev, ...response.data.user }));
+            setShowEditModal(false);
         } catch (error) {
-            // Error handled silently
+            // could show error toast
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -53,7 +89,6 @@ const UserProfile = () => {
 
     return (
         <main className="profile-page">
-            {/* Back Button */}
             <Link to="/home" className="profile-back-link">
                 <ArrowLeft size={20} />
                 Back to Home
@@ -63,7 +98,17 @@ const UserProfile = () => {
                 <div className="profile-meta">
                     {/* Avatar */}
                     <div className="profile-avatar">
-                        {profile?.fullName?.charAt(0)?.toUpperCase() || <User size={48} />}
+                        {profile?.profilePhoto ? (
+                            <img
+                                src={profile.profilePhoto}
+                                alt={profile.fullName}
+                                className="profile-avatar-img"
+                            />
+                        ) : (
+                            <svg className="profile-avatar-default" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                            </svg>
+                        )}
                     </div>
 
                     <div className="profile-info">
@@ -95,6 +140,10 @@ const UserProfile = () => {
 
                 {/* Actions */}
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <button onClick={openEditModal} className="profile-action-btn profile-action-btn--primary">
+                        <Pencil size={18} />
+                        Edit Profile
+                    </button>
                     <Link to="/saved" className="profile-action-btn profile-action-btn--secondary">
                         <Bookmark size={18} />
                         View Saved
@@ -137,6 +186,90 @@ const UserProfile = () => {
                     </div>
                 )}
             </section>
+
+            {/* Edit Profile Modal */}
+            {showEditModal && (
+                <div className="profile-modal-overlay" onClick={() => setShowEditModal(false)}>
+                    <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="profile-modal-header">
+                            <h2>Edit Profile</h2>
+                            <button
+                                className="profile-modal-close"
+                                onClick={() => setShowEditModal(false)}
+                                aria-label="Close"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSaveProfile} className="profile-modal-form">
+                            {/* Photo Upload */}
+                            <div className="profile-modal-photo-section">
+                                <div
+                                    className="profile-modal-photo"
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    {(photoPreview || profile?.profilePhoto) ? (
+                                        <img
+                                            src={photoPreview || profile.profilePhoto}
+                                            alt="Profile"
+                                            className="profile-avatar-img"
+                                        />
+                                    ) : (
+                                        <svg className="profile-avatar-default" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                                        </svg>
+                                    )}
+                                    <div className="profile-modal-photo-overlay">
+                                        <Camera size={20} />
+                                    </div>
+                                </div>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handlePhotoSelect}
+                                    style={{ display: 'none' }}
+                                />
+                                <span className="profile-modal-photo-label">Tap to change photo</span>
+                            </div>
+
+                            {/* Name */}
+                            <div className="profile-modal-field">
+                                <label htmlFor="edit-fullName">Full Name</label>
+                                <input
+                                    id="edit-fullName"
+                                    type="text"
+                                    value={editForm.fullName}
+                                    onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
+                                    placeholder="Your name"
+                                />
+                            </div>
+
+                            {/* Email (read only) */}
+                            <div className="profile-modal-field">
+                                <label htmlFor="edit-email">Email</label>
+                                <input
+                                    id="edit-email"
+                                    type="email"
+                                    value={profile?.email || ''}
+                                    disabled
+                                    className="profile-modal-field--disabled"
+                                />
+                                <small style={{ color: '#999', fontSize: '0.75rem' }}>Email cannot be changed</small>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="profile-modal-submit"
+                                disabled={isSaving}
+                            >
+                                {isSaving ? 'Saving...' : 'Save Changes'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </main>
     );
 };

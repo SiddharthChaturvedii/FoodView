@@ -27,7 +27,21 @@ const foodPartnerSchema = new mongoose.Schema({
         type: String,
         required: true,
         select: false
+    },
+    profilePhoto: {
+        type: String,
+        default: ''
+    },
+    totalMeals: {
+        type: Number,
+        default: 0
+    },
+    customersServed: {
+        type: Number,
+        default: 0
     }
+}, {
+    timestamps: true
 })
 
 const foodPartnerModel = mongoose.model("foodpartner", foodPartnerSchema);

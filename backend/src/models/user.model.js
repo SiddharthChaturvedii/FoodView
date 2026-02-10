@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         select: false
     },
+    profilePhoto: {
+        type: String,
+        default: ''
+    },
     volunteerScore: {
         type: Number,
         default: 0
