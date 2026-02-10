@@ -27,7 +27,7 @@ const Profile = () => {
         // Check if current user is the owner of this profile
         const userRole = localStorage.getItem('userRole');
         const currentUserId = localStorage.getItem('userId');
-        setIsOwner(userRole === 'foodPartner' && currentUserId === id);
+        setIsOwner(userRole === 'food-partner' && currentUserId === id);
 
         api.get(`/api/food-partner/${id}`)
             .then(response => {
