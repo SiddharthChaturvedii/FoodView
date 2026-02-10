@@ -4,31 +4,36 @@ const storageService = require('../services/storage.service');
 const { v4: uuid } = require('uuid');
 
 async function getFoodPartnerById(req, res) {
+    try {
+        const foodPartnerId = req.params.id;
 
-    const foodPartnerId = req.params.id;
+        const foodPartner = await foodPartnerModel.findById(foodPartnerId);
 
-    const foodPartner = await foodPartnerModel.findById(foodPartnerId)
-    const foodItemsByFoodPartner = await foodModel.find({ foodPartner: foodPartnerId })
-
-    if (!foodPartner) {
-        return res.status(404).json({ message: "Food partner not found" });
-    }
-
-    res.status(200).json({
-        message: "Food partner retrieved successfully",
-        foodPartner: {
-            _id: foodPartner._id,
-            name: foodPartner.name,
-            contactName: foodPartner.contactName,
-            phone: foodPartner.phone,
-            address: foodPartner.address,
-            email: foodPartner.email,
-            profilePhoto: foodPartner.profilePhoto || '',
-            totalMeals: foodPartner.totalMeals || 0,
-            customersServed: foodPartner.customersServed || 0,
-            foodItems: foodItemsByFoodPartner
+        if (!foodPartner) {
+            return res.status(404).json({ message: "Food partner not found" });
         }
-    });
+
+        const foodItemsByFoodPartner = await foodModel.find({ foodPartner: foodPartnerId });
+
+        res.status(200).json({
+            message: "Food partner retrieved successfully",
+            foodPartner: {
+                _id: foodPartner._id,
+                name: foodPartner.name,
+                contactName: foodPartner.contactName,
+                phone: foodPartner.phone,
+                address: foodPartner.address,
+                email: foodPartner.email,
+                profilePhoto: foodPartner.profilePhoto || '',
+                totalMeals: foodPartner.totalMeals || 0,
+                customersServed: foodPartner.customersServed || 0,
+                foodItems: foodItemsByFoodPartner
+            }
+        });
+    } catch (error) {
+        console.error("Get Food Partner Error:", error);
+        res.status(500).json({ message: "Error fetching food partner", error: error.message });
+    }
 }
 
 // Update food partner profile

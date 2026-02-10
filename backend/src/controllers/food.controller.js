@@ -6,65 +6,88 @@ const { v4: uuid } = require("uuid")
 
 
 async function createFood(req, res) {
-    const fileUploadResult = await storageService.uploadFile(req.file.buffer, uuid())
+    try {
+        // Guard: video file is required
+        if (!req.file || !req.file.buffer) {
+            return res.status(400).json({ message: "Video file is required" });
+        }
 
-    // Prepare food data
-    const foodData = {
-        name: req.body.name,
-        description: req.body.description,
-        video: fileUploadResult.url,
-        // Donation Fields
-        isDonation: req.body.isDonation === 'true' || req.body.isDonation === true, // Ensure boolean
-        quantity: req.body.quantity,
-        pickupTime: req.body.pickupTime,
-        expiryDate: req.body.expiryDate,
-        location: req.body.location ? JSON.parse(req.body.location) : undefined
-    };
+        const fileUploadResult = await storageService.uploadFile(req.file.buffer, uuid());
 
-    // Handle User Role vs Partner Role
-    if (req.role === 'user') {
-        foodData.user = req.user._id;
-        foodData.isDonation = true; // Users can ONLY donate
+        // Prepare food data
+        const foodData = {
+            name: req.body.name,
+            description: req.body.description,
+            video: fileUploadResult.url,
+            // Donation Fields
+            isDonation: req.body.isDonation === 'true' || req.body.isDonation === true,
+            quantity: req.body.quantity,
+            pickupTime: req.body.pickupTime,
+            expiryDate: req.body.expiryDate,
+        };
 
-        // If we want to assign a placeholder partner or leave it null.
-        // For now, leaving foodPartner undefined.
-    } else {
-        foodData.foodPartner = req.foodPartner._id;
+        // Safe JSON.parse for location
+        if (req.body.location) {
+            try {
+                foodData.location = JSON.parse(req.body.location);
+            } catch {
+                return res.status(400).json({ message: "Invalid location format" });
+            }
+        }
+
+        // Handle User Role vs Partner Role
+        if (req.role === 'user') {
+            foodData.user = req.user._id;
+            foodData.isDonation = true; // Users can ONLY donate
+        } else {
+            foodData.foodPartner = req.foodPartner._id;
+        }
+
+        const foodItem = await foodModel.create(foodData);
+
+        res.status(201).json({
+            message: "food created successfully",
+            food: foodItem
+        });
+    } catch (error) {
+        console.error("Create Food Error:", error);
+        res.status(500).json({ message: "Failed to create food item", error: error.message });
     }
-
-    const foodItem = await foodModel.create(foodData);
-
-    res.status(201).json({
-        message: "food created successfully",
-        food: foodItem
-    })
-
 }
 
 async function getFoodItems(req, res) {
-    // Filter: Show all standard posts OR non-expired donations
-    const query = {
-        $or: [
-            { isDonation: { $ne: true } }, // Standard posts (isDonation is false or undefined)
-            {
-                isDonation: true,
-                expiryDate: { $gt: new Date() }, // Only future expiry dates
-                status: 'available' // Only unclaimed donations
-            }
-        ]
-    };
+    try {
+        // Filter: Show all standard posts OR non-expired donations
+        const query = {
+            $or: [
+                { isDonation: { $ne: true } },
+                {
+                    isDonation: true,
+                    expiryDate: { $gt: new Date() },
+                    status: 'available'
+                }
+            ]
+        };
 
-    const foodItems = await foodModel.find(query).populate("foodPartner")
-    res.status(200).json({
-        message: "Food items fetched successfully",
-        foodItems
-    })
+        const foodItems = await foodModel.find(query).populate("foodPartner");
+        res.status(200).json({
+            message: "Food items fetched successfully",
+            foodItems
+        });
+    } catch (error) {
+        console.error("Get Food Items Error:", error);
+        res.status(500).json({ message: "Failed to fetch food items", error: error.message });
+    }
 }
 
 
 async function likeFood(req, res) {
     const { foodId } = req.body;
     const user = req.user;
+
+    if (!foodId) {
+        return res.status(400).json({ message: "foodId is required" });
+    }
 
     try {
         const isAlreadyLiked = await likeModel.findOne({
@@ -73,7 +96,6 @@ async function likeFood(req, res) {
         });
 
         if (isAlreadyLiked) {
-            // Unlike: remove the like
             await likeModel.deleteOne({
                 user: user._id,
                 food: foodId
@@ -83,14 +105,17 @@ async function likeFood(req, res) {
                 $inc: { likeCount: -1 }
             }, { new: true });
 
+            if (!updatedFood) {
+                return res.status(404).json({ message: "Food item not found" });
+            }
+
             return res.status(200).json({
                 message: "Food unliked successfully",
                 isLiked: false,
-                likeCount: updatedFood.likeCount
+                likeCount: Math.max(0, updatedFood.likeCount)
             });
         }
 
-        // Like: create new like
         await likeModel.create({
             user: user._id,
             food: foodId
@@ -100,79 +125,102 @@ async function likeFood(req, res) {
             $inc: { likeCount: 1 }
         }, { new: true });
 
+        if (!updatedFood) {
+            return res.status(404).json({ message: "Food item not found" });
+        }
+
         res.status(201).json({
             message: "Food liked successfully",
             isLiked: true,
             likeCount: updatedFood.likeCount
         });
     } catch (error) {
+        console.error("Like Food Error:", error);
         res.status(500).json({ message: "Error processing like", error: error.message });
     }
 }
 
 async function saveFood(req, res) {
+    try {
+        const { foodId } = req.body;
+        const user = req.user;
 
-    const { foodId } = req.body;
-    const user = req.user;
+        if (!foodId) {
+            return res.status(400).json({ message: "foodId is required" });
+        }
 
-    const isAlreadySaved = await saveModel.findOne({
-        user: user._id,
-        food: foodId
-    })
-
-    if (isAlreadySaved) {
-        await saveModel.deleteOne({
+        const isAlreadySaved = await saveModel.findOne({
             user: user._id,
             food: foodId
-        })
+        });
+
+        if (isAlreadySaved) {
+            await saveModel.deleteOne({
+                user: user._id,
+                food: foodId
+            });
+
+            await foodModel.findByIdAndUpdate(foodId, {
+                $inc: { savesCount: -1 }
+            });
+
+            return res.status(200).json({
+                message: "Food unsaved successfully"
+            });
+        }
+
+        const save = await saveModel.create({
+            user: user._id,
+            food: foodId
+        });
 
         await foodModel.findByIdAndUpdate(foodId, {
-            $inc: { savesCount: -1 }
-        })
+            $inc: { savesCount: 1 }
+        });
 
-        return res.status(200).json({
-            message: "Food unsaved successfully"
-        })
+        res.status(201).json({
+            message: "Food saved successfully",
+            save
+        });
+    } catch (error) {
+        console.error("Save Food Error:", error);
+        res.status(500).json({ message: "Error saving food", error: error.message });
     }
-
-    const save = await saveModel.create({
-        user: user._id,
-        food: foodId
-    })
-
-    await foodModel.findByIdAndUpdate(foodId, {
-        $inc: { savesCount: 1 }
-    })
-
-    res.status(201).json({
-        message: "Food saved successfully",
-        save
-    })
-
 }
 
 async function getSaveFood(req, res) {
+    try {
+        const user = req.user;
 
-    const user = req.user;
+        const savedFoods = await saveModel.find({ user: user._id }).populate('food');
 
-    const savedFoods = await saveModel.find({ user: user._id }).populate('food');
+        // Return empty array instead of 404 — this is not an error, just no data
+        if (!savedFoods || savedFoods.length === 0) {
+            return res.status(200).json({
+                message: "No saved foods found",
+                savedFoods: []
+            });
+        }
 
-    if (!savedFoods || savedFoods.length === 0) {
-        return res.status(404).json({ message: "No saved foods found" });
+        res.status(200).json({
+            message: "Saved foods retrieved successfully",
+            savedFoods
+        });
+    } catch (error) {
+        console.error("Get Saved Food Error:", error);
+        res.status(500).json({ message: "Error retrieving saved foods", error: error.message });
     }
-
-    res.status(200).json({
-        message: "Saved foods retrieved successfully",
-        savedFoods
-    });
-
 }
 
 
 async function claimDonation(req, res) {
     const { foodId } = req.params;
-    const { role } = req.body; // 'volunteer' or 'consumer'
+    const { role } = req.body;
     const user = req.user;
+
+    if (!role || !['volunteer', 'consumer'].includes(role)) {
+        return res.status(400).json({ message: "Role must be 'volunteer' or 'consumer'" });
+    }
 
     try {
         const food = await foodModel.findById(foodId);
@@ -201,7 +249,7 @@ async function claimDonation(req, res) {
             await user.save();
         }
 
-        // Generate Ticket (Simple UUID for now)
+        // Generate Ticket
         const ticketId = uuid();
 
         res.status(200).json({
@@ -209,7 +257,7 @@ async function claimDonation(req, res) {
             ticket: {
                 id: ticketId,
                 foodName: food.name,
-                address: "Food Partner Location", // Ideally fetched from Partner profile
+                address: food.location?.address || "Food Partner Location",
                 expiry: food.expiryDate
             },
             userStats: role === 'volunteer' ? {

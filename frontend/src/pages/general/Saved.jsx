@@ -9,17 +9,21 @@ const Saved = () => {
     useEffect(() => {
         api.get("/api/food/save")
             .then(response => {
-                const savedFoods = response.data.savedFoods.map((item) => ({
-                    _id: item.food._id,
-                    video: item.food.video,
-                    description: item.food.description,
-                    likeCount: item.food.likeCount,
-                    savesCount: item.food.savesCount,
-                    commentsCount: item.food.commentsCount,
-                    foodPartner: item.food.foodPartner,
-                }))
-                setVideos(savedFoods)
+                const savedFoods = (response.data.savedFoods || [])
+                    .filter(item => item.food) // Guard against null food refs
+                    .map((item) => ({
+                        _id: item.food._id,
+                        video: item.food.video,
+                        name: item.food.name,
+                        description: item.food.description,
+                        likeCount: item.food.likeCount || 0,
+                        savesCount: item.food.savesCount || 0,
+                        commentsCount: item.food.commentsCount || 0,
+                        foodPartner: item.food.foodPartner,
+                    }));
+                setVideos(savedFoods);
             })
+            .catch(() => { /* silently handle — empty state will show */ })
     }, [])
 
     const removeSaved = async (item) => {

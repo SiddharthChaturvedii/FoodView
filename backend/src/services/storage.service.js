@@ -7,12 +7,25 @@ const imagekit = new ImageKit({
 });
 
 async function uploadFile(file, fileName) {
-    const result = await imagekit.upload({
-        file: file, // required
-        fileName: fileName, // required
-    })
+    if (!file || !fileName) {
+        throw new Error("File and fileName are required for upload");
+    }
 
-    return result; // Return the URL of the uploaded file
+    try {
+        const result = await imagekit.upload({
+            file: file,
+            fileName: fileName,
+        });
+
+        if (!result || !result.url) {
+            throw new Error("Upload succeeded but no URL returned");
+        }
+
+        return result;
+    } catch (error) {
+        console.error("Storage Upload Error:", error.message);
+        throw new Error("File upload failed: " + error.message);
+    }
 }
 
 module.exports = {
