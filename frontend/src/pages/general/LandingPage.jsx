@@ -138,12 +138,13 @@ const LandingPage = () => {
         };
 
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         render(0);
 
         const handleResize = () => {
             canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            render(Math.round(frameObject.frame)); // Re-render current frame
         };
         window.addEventListener("resize", handleResize);
 
@@ -191,7 +192,7 @@ const LandingPage = () => {
     return (
         <div className="bg-black min-h-screen">
             {/* Hero Section */}
-            <div ref={containerRef} className="relative w-full h-screen bg-black overflow-hidden">
+            <div ref={containerRef} className="relative w-full h-[100dvh] bg-black overflow-hidden">
                 <Navbar />
 
                 {!isLoaded && (

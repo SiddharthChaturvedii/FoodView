@@ -26,6 +26,7 @@ const UserLogin = () => {
 
       localStorage.setItem('userRole', 'user');
       localStorage.setItem('userId', response.data.user?._id || response.data.user?.id || '');
+      localStorage.setItem('token', response.data.token);
       navigate("/home");
 
     } catch (err) {
