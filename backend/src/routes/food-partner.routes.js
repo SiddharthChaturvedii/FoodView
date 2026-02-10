@@ -19,7 +19,7 @@ router.put('/profile',
 
 /* /api/food-partner/:id — public profile view (any authenticated user) */
 router.get("/:id",
-    authMiddleware.authUserMiddleware,
+    authMiddleware.authAnyMiddleware,
     foodPartnerController.getFoodPartnerById)
 
 module.exports = router;

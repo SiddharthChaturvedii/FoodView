@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 async function authFoodPartnerMiddleware(req, res, next) {
 
-    const token = req.cookies.token;
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
         return res.status(401).json({
@@ -38,7 +38,7 @@ async function authFoodPartnerMiddleware(req, res, next) {
 
 async function authUserMiddleware(req, res, next) {
 
-    const token = req.cookies.token;
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
         return res.status(401).json({
@@ -70,7 +70,7 @@ async function authUserMiddleware(req, res, next) {
 } // End of authUserMiddleware
 
 async function authAnyMiddleware(req, res, next) {
-    const token = req.cookies.token;
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Please login first" });
 
     try {

@@ -19,7 +19,7 @@ router.post('/',
 
 /* GET /api/food/ [protected] */
 router.get("/",
-    authMiddleware.authUserMiddleware,
+    authMiddleware.authAnyMiddleware,
     foodController.getFoodItems)
 
 
