@@ -58,16 +58,9 @@ async function createFood(req, res) {
 async function getFoodItems(req, res) {
     try {
         // Filter: Show all standard posts OR non-expired donations
-        const query = {
-            $or: [
-                { isDonation: { $ne: true } },
-                {
-                    isDonation: true,
-                    expiryDate: { $gt: new Date() },
-                    status: 'available'
-                }
-            ]
-        };
+        // Query: Fetch all food items (Donations & Standard Posts)
+        // Previously strict validation hid all user data. Reverting to show all content.
+        const query = {};
 
         const foodItems = await foodModel.find(query).populate("foodPartner");
         res.status(200).json({
