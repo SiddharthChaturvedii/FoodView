@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/auth-shared.css';
 import AuthLayout from '../../components/auth/AuthLayout';
 import api from '../../utils/api';
-import { useNavigate } from 'react-router-dom';
 
 const UserLogin = () => {
 
@@ -24,9 +24,9 @@ const UserLogin = () => {
         password
       });
 
-      // console.log(response.data);
       localStorage.setItem('userRole', 'user');
-      navigate("/home"); // Redirect to home after login
+      localStorage.setItem('userId', response.data.user?._id || response.data.user?.id || '');
+      navigate("/home");
 
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {
@@ -42,6 +42,12 @@ const UserLogin = () => {
   return (
     <AuthLayout>
       <div className="auth-card" role="region" aria-labelledby="user-login-title">
+        {/* Role Toggle */}
+        <div className="auth-role-toggle">
+          <Link to="/user/login" className="auth-role-btn auth-role-btn--active">User</Link>
+          <Link to="/food-partner/login" className="auth-role-btn">Food Partner</Link>
+        </div>
+
         <header>
           <h1 id="user-login-title" className="auth-title">Welcome back</h1>
           <p className="auth-subtitle">Sign in to continue your food journey.</p>
@@ -62,7 +68,7 @@ const UserLogin = () => {
           </button>
         </form>
         <div className="auth-alt-action">
-          New here? <a href="/user/register">Create account</a>
+          New here? <Link to="/user/register">Create account</Link>
         </div>
       </div>
     </AuthLayout>

@@ -2,49 +2,70 @@ import React, { useEffect, useState } from 'react'
 import api from '../../utils/api';
 import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import CreateFood from '../food-partner/CreateFood';
-import LandingPage from './LandingPage';
 
 const Home = () => {
   const [videos, setVideos] = useState([])
+  const [likedFoodIds, setLikedFoodIds] = useState(new Set())
 
   useEffect(() => {
-    // ... (rest of useEffect)
+    // Fetch food items
     api.get("/api/food")
       .then(response => {
-        // Shuffle the videos randomly
         const shuffledVideos = [...response.data.foodItems].sort(() => Math.random() - 0.5);
         setVideos(shuffledVideos);
       })
-      .catch(() => { /* noop: optionally handle error */ })
-  }, [])
+      .catch(() => { /* noop */ })
 
-  // ... (rest of functions)
+    // Fetch user's liked foods
+    api.get("/api/user/liked")
+      .then(response => {
+        const likedIds = new Set(
+          (response.data.likedFoods || []).map(food => food._id)
+        );
+        setLikedFoodIds(likedIds);
+      })
+      .catch(() => { /* noop - user may not be logged in */ })
+  }, [])
 
   async function likeVideo(item) {
     try {
       const response = await api.post("/api/food/like", { foodId: item._id });
 
-      // Use authoritative likeCount from backend
+      // Update like count
       setVideos((prev) => prev.map((v) =>
         v._id === item._id
           ? { ...v, likeCount: response.data.likeCount }
           : v
       ));
+
+      // Update liked status
+      setLikedFoodIds(prev => {
+        const next = new Set(prev);
+        if (response.data.isLiked) {
+          next.add(item._id);
+        } else {
+          next.delete(item._id);
+        }
+        return next;
+      });
     } catch (error) {
-      // Silently handle error - could add toast notification here
+      // Silently handle error
     }
   }
 
   async function saveVideo(item) {
-    const response = await api.post("/api/food/save", { foodId: item._id })
+    try {
+      const response = await api.post("/api/food/save", { foodId: item._id });
 
-    if (response.data.save) {
-      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))
-    } else {
-      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v))
+      setVideos((prev) => prev.map((v) =>
+        v._id === item._id
+          ? { ...v, savesCount: response.data.savesCount ?? (response.data.save ? v.savesCount + 1 : v.savesCount - 1) }
+          : v
+      ));
+    } catch (error) {
+      // Silently handle error
     }
   }
 
@@ -60,6 +81,7 @@ const Home = () => {
         </Link>
         <ReelFeed
           items={videos}
+          likedFoodIds={likedFoodIds}
           onLike={likeVideo}
           onSave={saveVideo}
           emptyMessage="No videos available."
@@ -67,7 +89,6 @@ const Home = () => {
       </div>
     </>
   );
-
 }
 
 export default Home

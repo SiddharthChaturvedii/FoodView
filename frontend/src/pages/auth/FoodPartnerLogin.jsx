@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/auth-shared.css';
 import AuthLayout from '../../components/auth/AuthLayout';
 import api from '../../utils/api';
-import { useNavigate, Link } from 'react-router-dom';
 
 const FoodPartnerLogin = () => {
   const navigate = useNavigate();
@@ -28,7 +28,6 @@ const FoodPartnerLogin = () => {
       localStorage.setItem('userId', response.data.foodPartner._id || response.data.foodPartner.id);
       navigate("/home");
     } catch (err) {
-      // Handle error from backend
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
       } else {
@@ -42,6 +41,12 @@ const FoodPartnerLogin = () => {
   return (
     <AuthLayout>
       <div className="auth-card" role="region" aria-labelledby="partner-login-title">
+        {/* Role Toggle */}
+        <div className="auth-role-toggle">
+          <Link to="/user/login" className="auth-role-btn">User</Link>
+          <Link to="/food-partner/login" className="auth-role-btn auth-role-btn--active">Food Partner</Link>
+        </div>
+
         <header>
           <h1 id="partner-login-title" className="auth-title">Partner login</h1>
           <p className="auth-subtitle">Access your dashboard and manage orders.</p>

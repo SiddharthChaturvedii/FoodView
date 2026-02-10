@@ -33,13 +33,11 @@ const ExpandableDescription = ({ text }) => {
   )
 }
 
-// Reusable feed for vertical reels
-// Props:
-// - items: Array of video items { _id, video, description, likeCount, savesCount, foodPartner }
+// - likedFoodIds: Set of food IDs that the user has liked
 // - onLike: (item) => void | Promise<void>
 // - onSave: (item) => void | Promise<void>
 // - emptyMessage: string
-const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' }) => {
+const ReelFeed = ({ items = [], likedFoodIds = new Set(), onLike, onSave, emptyMessage = 'No videos yet.' }) => {
   const videoRefs = useRef(new Map())
 
   useEffect(() => {
@@ -94,15 +92,25 @@ const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' 
                 <div className="reel-action-group">
                   <button
                     onClick={onLike ? () => onLike(item) : undefined}
-                    className="reel-action"
-                    aria-label="Like"
+                    className={`reel-action ${likedFoodIds.has(item._id) ? 'reel-action--liked' : ''}`}
+                    aria-label={likedFoodIds.has(item._id) ? 'Unlike' : 'Like'}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill={likedFoodIds.has(item._id) ? '#ef4444' : 'none'}
+                      stroke={likedFoodIds.has(item._id) ? '#ef4444' : 'currentColor'}
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
                     </svg>
                   </button>
                   <div className="reel-action__count">{item.likeCount ?? item.likesCount ?? item.likes ?? 0}</div>
                 </div>
+
 
                 <div className="reel-action-group">
                   <button

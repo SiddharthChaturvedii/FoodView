@@ -176,6 +176,32 @@
   transform: translateY(1px);
 }
 
+/* Liked state - red glow */
+.reel-action--liked {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reel-action--liked {
+    animation: like-pulse 0.3s ease-out;
+  }
+}
+
+@keyframes like-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 .reel-action__count {
   color: #fff;
   text-align: center;

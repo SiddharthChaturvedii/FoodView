@@ -37,9 +37,9 @@ const FoodPartnerRegister = () => {
       });
 
       // console.log(response.data);
-      setSuccessMessage('✅ Account created! Redirecting...');
+      setSuccessMessage('✅ Account created! Redirecting to login...');
       setTimeout(() => {
-        navigate("/create-food");
+        navigate("/food-partner/login");
       }, 2000);
 
     } catch (err) {
