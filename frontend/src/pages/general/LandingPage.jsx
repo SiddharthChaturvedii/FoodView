@@ -11,22 +11,38 @@ import Footer from "../../components/common/Footer";
 
 // Transparent Navbar Component
 const Navbar = () => {
-    const [profileLink, setProfileLink] = useState("/user/login");
+    const [profileLink, setProfileLink] = useState(() => {
+        const role = localStorage.getItem('userRole');
+        const id = localStorage.getItem('userId');
+        if (role === 'food-partner' && id) return `/food-partner/${id}`;
+        if (role === 'user') return '/user/profile';
+        return '/user/login';
+    });
 
     useEffect(() => {
-        // Fetch current user role to determine profile link
+        // Double check with API to ensure session is valid
         import("../../utils/api").then(({ default: api }) => {
             api.get("/api/auth/me")
                 .then(res => {
                     const user = res.data.user;
                     if (user.role === "food-partner") {
-                        setProfileLink(`/food-partner/${user._id}`);
+                        const link = `/food-partner/${user._id}`;
+                        setProfileLink(link);
+                        // Sync localStorage just in case
+                        localStorage.setItem('userRole', 'food-partner');
+                        localStorage.setItem('userId', user._id);
                     } else {
-                        setProfileLink("/user/profile");
+                        const link = "/user/profile";
+                        setProfileLink(link);
+                        localStorage.setItem('userRole', 'user');
+                        localStorage.setItem('userId', user._id);
                     }
                 })
                 .catch(() => {
+                    // If API fails (401), clear storage and link to login
                     setProfileLink("/user/login");
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
                 });
         });
     }, []);

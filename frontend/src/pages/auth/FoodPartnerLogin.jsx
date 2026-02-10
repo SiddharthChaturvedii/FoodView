@@ -24,7 +24,7 @@ const FoodPartnerLogin = () => {
       });
 
       // Store user info for profile ownership checks
-      localStorage.setItem('userRole', 'foodPartner');
+      localStorage.setItem('userRole', 'food-partner');
       localStorage.setItem('userId', response.data.foodPartner._id || response.data.foodPartner.id);
       navigate("/home");
     } catch (err) {
