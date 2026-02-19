@@ -115,16 +115,9 @@ const Annapurna = () => {
     const [distances, setDistances] = useState({});
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showDonateModal, setShowDonateModal] = useState(false);
-    const [copied, setCopied] = useState(false);
     const [donationsList, setDonationsList] = useState([]); // Real data state
     const [isOffline, setIsOffline] = useState(false);
 
-
-    const handleCopyUPI = () => {
-        navigator.clipboard.writeText("9243566990@ybl");
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
 
     // Number of items to show at once
     const itemsPerPage = 3;
@@ -234,7 +227,7 @@ const Annapurna = () => {
                                     <QrCode className="w-5 h-5 text-orange-600" />
                                     Donate Money
                                 </h3>
-                                <p className="text-sm text-gray-600 mb-4">Scan to contribute directly.</p>
+                                <p className="text-sm text-gray-600 mb-4">Scan QR code to donate via UPI.</p>
                                 <div className="bg-white p-2 rounded-xl border border-dashed border-gray-300 flex justify-center overflow-hidden relative">
                                     <div className="w-56 relative rounded-lg bg-white flex items-center justify-center">
                                         {/* QR Code - Full aspect ratio */}
@@ -245,12 +238,6 @@ const Annapurna = () => {
                                         />
                                     </div>
                                 </div>
-                                <button
-                                    onClick={handleCopyUPI}
-                                    className="w-full mt-4 py-2 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-colors"
-                                >
-                                    {copied ? "Copied! ✅" : "Copy UPI ID"}
-                                </button>
                             </div>
 
                             <div className="text-center text-gray-400 font-bold">- OR -</div>

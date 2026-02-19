@@ -27,7 +27,7 @@ async function registerUser(req, res) {
 
         const token = jwt.sign({
             id: user._id,
-        }, process.env.JWT_SECRET)
+        }, process.env.JWT_SECRET, { expiresIn: '24h' })
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -76,7 +76,7 @@ async function loginUser(req, res) {
 
         const token = jwt.sign({
             id: user._id
-        }, process.env.JWT_SECRET)
+        }, process.env.JWT_SECRET, { expiresIn: '24h' })
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -138,7 +138,7 @@ async function registerFoodPartner(req, res) {
 
         const token = jwt.sign({
             id: foodPartner._id,
-        }, process.env.JWT_SECRET)
+        }, process.env.JWT_SECRET, { expiresIn: '24h' })
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -191,7 +191,7 @@ async function loginFoodPartner(req, res) {
 
         const token = jwt.sign({
             id: foodPartner._id,
-        }, process.env.JWT_SECRET)
+        }, process.env.JWT_SECRET, { expiresIn: '24h' })
 
         res.cookie("token", token, {
             httpOnly: true,
