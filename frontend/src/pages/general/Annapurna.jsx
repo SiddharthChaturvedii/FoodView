@@ -117,6 +117,7 @@ const Annapurna = () => {
     const [showDonateModal, setShowDonateModal] = useState(false);
     const [copied, setCopied] = useState(false);
     const [donationsList, setDonationsList] = useState([]); // Real data state
+    const [isOffline, setIsOffline] = useState(false);
 
 
     const handleCopyUPI = () => {
@@ -169,8 +170,10 @@ const Annapurna = () => {
                 }));
 
                 setDonationsList(validDonations.length > 0 ? validDonations : mockDonations);
+                setIsOffline(false);
             } catch (error) {
-                // Silently fall back to mock data
+                console.error("Failed to fetch donations:", error);
+                setIsOffline(true);
                 setDonationsList(mockDonations);
             }
         };
@@ -204,6 +207,12 @@ const Annapurna = () => {
     return (
         <div className="annapurna-page relative">
             <div className="mesh-background"></div>
+
+            {isOffline && (
+                <div className="bg-orange-600 text-white text-center py-2 px-4 text-sm font-bold animate-in slide-in-from-top-full fixed top-0 left-0 right-0 z-[60]">
+                    Live updates unavailable. Showing demo data.
+                </div>
+            )}
 
             {/* Donate Modal */}
             {showDonateModal && (
@@ -266,7 +275,7 @@ const Annapurna = () => {
             </Link>
 
             {/* 1. Hero Section (Restored Animation) */}
-            <header className="flex-1 flex items-center justify-center min-h-[90vh]">
+            <header className="flex-1 flex items-center justify-center min-h-[90dvh]">
                 <Hero onDonateClick={() => setShowDonateModal(true)} />
             </header>
 

@@ -13,7 +13,7 @@ const MOODS = [
         icon: Flame,
         color: '#ef4444',
         gradient: 'linear-gradient(135deg, #ef4444, #f97316)',
-        keywords: ['spicy', 'hot', 'chili', 'chilli', 'pepper', 'fire', 'schezwan', 'szechuan', 'tandoori', 'masala', 'jalapeño', 'sriracha', 'buffalo', 'vindaloo', 'curry', 'tikka', 'habanero', 'wasabi', 'kimchi', 'sambal', 'harissa', 'cayenne', 'bhut', 'ghost']
+        keywords: ['spicy', 'hot', 'chili', 'chilli', 'pepper', 'fire', 'schezwan', 'szechuan', 'tandoori', 'masala', 'jalapeño', 'sriracha', 'buffalo', 'vindaloo', 'curry', 'tikka', 'habanero', 'wasabi', 'kimchi', 'sambal', 'harissa', 'cayenne', 'bhut', 'ghost', 'peri peri', 'paprika', 'heat', 'zesty', 'flaming']
     },
     {
         id: 'sweet',
@@ -22,7 +22,7 @@ const MOODS = [
         icon: Cake,
         color: '#ec4899',
         gradient: 'linear-gradient(135deg, #ec4899, #f472b6)',
-        keywords: ['sweet', 'cake', 'chocolate', 'dessert', 'ice cream', 'icecream', 'pastry', 'sugar', 'honey', 'velvet', 'brownie', 'cookie', 'cupcake', 'donut', 'doughnut', 'waffle', 'pancake', 'pudding', 'caramel', 'vanilla', 'strawberry', 'mango', 'fruit', 'treacle', 'custard', 'mousse', 'tart', 'pie', 'gulab', 'jalebi', 'rasgulla', 'ladoo', 'barfi', 'halwa', 'kheer']
+        keywords: ['sweet', 'cake', 'chocolate', 'dessert', 'ice cream', 'icecream', 'pastry', 'sugar', 'honey', 'velvet', 'brownie', 'cookie', 'cupcake', 'donut', 'doughnut', 'waffle', 'pancake', 'pudding', 'caramel', 'vanilla', 'strawberry', 'mango', 'fruit', 'treacle', 'custard', 'mousse', 'tart', 'pie', 'gulab', 'jalebi', 'rasgulla', 'ladoo', 'barfi', 'halwa', 'kheer', 'mithai', 'shake', 'smoothie', 'sugary', 'candy', 'treat']
     },
     {
         id: 'healthy',
@@ -31,7 +31,7 @@ const MOODS = [
         icon: Salad,
         color: '#22c55e',
         gradient: 'linear-gradient(135deg, #22c55e, #84cc16)',
-        keywords: ['healthy', 'salad', 'fresh', 'green', 'organic', 'light', 'garden', 'vegetable', 'harvest', 'quinoa', 'avocado', 'smoothie', 'juice', 'detox', 'protein', 'bowl', 'grain', 'oat', 'seed', 'nut', 'sprout', 'kale', 'spinach', 'broccoli', 'acai', 'lean', 'grilled', 'steamed', 'poha', 'upma', 'dal', 'lentil', 'muesli', 'granola']
+        keywords: ['healthy', 'salad', 'fresh', 'green', 'organic', 'light', 'garden', 'vegetable', 'harvest', 'quinoa', 'avocado', 'smoothie', 'juice', 'detox', 'protein', 'bowl', 'grain', 'oat', 'seed', 'nut', 'sprout', 'kale', 'spinach', 'broccoli', 'acai', 'lean', 'grilled', 'steamed', 'poha', 'upma', 'dal', 'lentil', 'muesli', 'granola', 'fruit', 'boiled', 'diet', 'low cal', 'nutritious', 'keto', 'vegan', 'gluten-free']
     },
     {
         id: 'comfort',
@@ -40,7 +40,7 @@ const MOODS = [
         icon: Beef,
         color: '#f59e0b',
         gradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-        keywords: ['comfort', 'burger', 'fries', 'cheese', 'pasta', 'noodles', 'pizza', 'heritage', 'nonna', 'mac', 'grilled cheese', 'sandwich', 'wrap', 'taco', 'quesadilla', 'fried', 'crispy', 'crunchy', 'loaded', 'melt', 'steak', 'chicken', 'wings', 'biryani', 'pulao', 'paratha', 'roti', 'naan', 'butter', 'paneer', 'chole', 'samosa', 'pakora', 'momos', 'chow', 'maggi', 'rice']
+        keywords: ['comfort', 'burger', 'fries', 'cheese', 'pasta', 'noodles', 'pizza', 'heritage', 'nonna', 'mac', 'grilled cheese', 'sandwich', 'wrap', 'taco', 'quesadilla', 'fried', 'crispy', 'crunchy', 'loaded', 'melt', 'steak', 'chicken', 'wings', 'biryani', 'pulao', 'paratha', 'roti', 'naan', 'butter', 'paneer', 'chole', 'samosa', 'pakora', 'momos', 'chow', 'maggi', 'rice', 'dal makhani', 'rajma', 'khichdi', 'soup', 'warm', 'home', 'hearty', 'filling']
     },
     {
         id: 'vegan',
@@ -49,7 +49,7 @@ const MOODS = [
         icon: Leaf,
         color: '#10b981',
         gradient: 'linear-gradient(135deg, #10b981, #34d399)',
-        keywords: ['vegan', 'plant', 'tofu', 'vegetarian', 'veggie', 'zen', 'artisan', 'soy', 'tempeh', 'seitan', 'mushroom', 'jackfruit', 'chickpea', 'hummus', 'falafel', 'lentil', 'bean', 'cashew', 'almond', 'coconut', 'oat milk', 'dairy-free', 'eggless', 'herbal', 'raw', 'veg']
+        keywords: ['vegan', 'plant', 'tofu', 'vegetarian', 'veggie', 'zen', 'artisan', 'soy', 'tempeh', 'seitan', 'mushroom', 'jackfruit', 'chickpea', 'hummus', 'falafel', 'lentil', 'bean', 'cashew', 'almond', 'coconut', 'oat milk', 'dairy-free', 'eggless', 'herbal', 'raw', 'veg', 'plant-based', 'cruelty-free']
     },
     {
         id: 'seafood',
@@ -58,7 +58,7 @@ const MOODS = [
         icon: Utensils,
         color: '#0ea5e9',
         gradient: 'linear-gradient(135deg, #0ea5e9, #38bdf8)',
-        keywords: ['seafood', 'fish', 'shrimp', 'sushi', 'sashimi', 'roll', 'ocean', 'sea', 'prawn', 'lobster', 'crab', 'salmon', 'tuna', 'oyster', 'clam', 'mussel', 'calamari', 'squid', 'grilled fish', 'fish fry', 'ceviche', 'poke', 'mahi', 'tilapia', 'cod', 'anchovy', 'mackerel']
+        keywords: ['seafood', 'fish', 'shrimp', 'sushi', 'sashimi', 'roll', 'ocean', 'sea', 'prawn', 'lobster', 'crab', 'salmon', 'tuna', 'oyster', 'clam', 'mussel', 'calamari', 'squid', 'grilled fish', 'fish fry', 'ceviche', 'poke', 'mahi', 'tilapia', 'cod', 'anchovy', 'mackerel', 'shellfish', 'prawns']
     }
 ];
 
@@ -98,9 +98,15 @@ const FoodMoodSelector = () => {
             setIsFallback(false);
         } else {
             // Fallback: show random foods when no keyword matches
-            const shuffled = [...foods].sort(() => Math.random() - 0.5);
-            setFilteredFoods(shuffled.slice(0, Math.min(6, shuffled.length)));
-            setIsFallback(true);
+            // Ensure we have some foods to show
+            if (foods.length > 0) {
+                const shuffled = [...foods].sort(() => Math.random() - 0.5);
+                setFilteredFoods(shuffled.slice(0, Math.min(4, shuffled.length)));
+                setIsFallback(true);
+            } else {
+                setFilteredFoods([]);
+                setIsFallback(false);
+            }
         }
 
         setShowResults(true);

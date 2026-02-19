@@ -99,8 +99,44 @@ async function authAnyMiddleware(req, res, next) {
     }
 }
 
+async function authOptionalMiddleware(req, res, next) {
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+    // crucial: if no token, just proceed as guest
+    if (!token) return next();
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Try finding Food Partner
+        const foodPartner = await foodPartnerModel.findById(decoded.id);
+        if (foodPartner) {
+            req.foodPartner = foodPartner;
+            req.role = 'partner';
+            return next();
+        }
+
+        // Try finding User
+        const user = await userModel.findById(decoded.id);
+        if (user) {
+            req.user = user;
+            req.role = 'user';
+            return next();
+        }
+
+        // If token valid but user not found, strictly proceed as guest or 401? 
+        // Better to treat as guest to avoid blocking public content if account deleted
+        return next();
+
+    } catch (err) {
+        // If token invalid, proceed as guest
+        return next();
+    }
+}
+
 module.exports = {
     authFoodPartnerMiddleware,
     authUserMiddleware,
-    authAnyMiddleware
+    authAnyMiddleware,
+    authOptionalMiddleware
 }

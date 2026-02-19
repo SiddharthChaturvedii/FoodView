@@ -369,7 +369,7 @@
   box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3));
   width: 100%;
   max-width: 480px;
-  max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
   padding: var(--space-6);
 }

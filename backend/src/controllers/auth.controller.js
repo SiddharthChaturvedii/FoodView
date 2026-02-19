@@ -42,7 +42,8 @@ async function registerUser(req, res) {
                 _id: user._id,
                 email: user.email,
                 fullName: user.fullName
-            }
+            },
+            token: token
         })
     } catch (error) {
         console.error("Error registering user:", error);
@@ -155,7 +156,8 @@ async function registerFoodPartner(req, res) {
                 address: foodPartner.address,
                 contactName: foodPartner.contactName,
                 phone: foodPartner.phone
-            }
+            },
+            token: token
         })
     } catch (error) {
         console.error("Error registering food partner:", error);
@@ -204,7 +206,8 @@ async function loginFoodPartner(req, res) {
                 _id: foodPartner._id,
                 email: foodPartner.email,
                 businessName: foodPartner.businessName
-            }
+            },
+            token: token
         })
     } catch (error) {
         console.error("Error logging in food partner:", error);
