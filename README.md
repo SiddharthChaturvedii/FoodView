@@ -279,11 +279,7 @@ Please follow conventional commits and open an issue before starting major chang
 
 ---
 
-## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
-
----
 
 <div align="center">
   Built with ❤️ by <a href="https://github.com/SiddharthChaturvedii">Siddharth Chaturvedi</a>
